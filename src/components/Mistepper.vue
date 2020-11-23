@@ -3,7 +3,8 @@
   <v-stepper v-model="e1">
     <v-stepper-header>
       <v-stepper-step :complete="e1 > 1" step="1">
-        <h2>Seleccione chat</h2>
+        <h2 v-if="chatogrupo">Seleccione Chat</h2>
+        <h2 v-else>Seleccione Grupo</h2>
       </v-stepper-step>
 
       <v-divider></v-divider>
@@ -72,7 +73,65 @@
             </v-container>
           </v-layout>
 
-          <v-layout v-else></v-layout>
+          <v-layout justify-center v-else>
+            <v-container
+              v-for="item in grupos"
+              v-bind:key="item.id"
+              class="grey lighten-5 mb-6"
+            >
+              <v-row no-gutters>
+                <v-card
+                  min-width="344"
+                  outlined
+                  class="pa-2 lastarjetaschats"
+                  :id="tarjetaid(item.ID)"
+                >
+                  <v-list-item three-line>
+                    <v-list-item-content>
+                      <div class="overline mb-4">
+                        <v-badge
+                          v-if="item.MENSAJESSINLEER > 0"
+                          color="green"
+                          :content="item.MENSAJESSINLEER"
+                        >
+                        <v-icon>mdi-account-multiple-outline</v-icon>
+                        </v-badge>
+                      </div>
+                      <v-list-item-title class="headline mb-1">
+                        {{ item.NOMBRE }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+
+                    <img
+                      height="80px"
+                      src="https://i.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE"
+                    />
+                  </v-list-item>
+
+                  <v-card-actions>
+                    <v-btn
+                      outlined
+                      rounded
+                      text
+                      color="primary"
+                      @click="seleccionado(item, chats)"
+                      >SELECCIONAR</v-btn
+                    >
+
+
+                         <v-btn
+                      outlined
+                      rounded
+                      text
+                      color="primary"
+                      @click="seleccionado(item, chats)"
+                      >MIEMBROS</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-row>
+            </v-container>
+          </v-layout>
         </v-card>
 
         <v-btn
@@ -159,6 +218,17 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
+    } else {
+      axios
+        .post("http://localhost:54119/api/smartchat/misgrupos", {
+          telefono: this.$route.params.id.split("&&")[0],
+        })
+        .then((response) => {
+          this.grupos = response.data.GRUPOS;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   },
 
@@ -183,7 +253,7 @@ export default {
     },
 
     volveratras: function () {
-      this.chatseleccionado=null;
+      this.chatseleccionado = null;
       this.e1 = 1;
     },
 
@@ -256,8 +326,8 @@ export default {
           })
           .then((response) => {
             console.log(response.data.mensajes);
-            this.mensajeescrito='';
-            
+            this.mensajeescrito = "";
+
             this.iniciarChat();
 
             this.mandarnotificacion();
@@ -322,6 +392,7 @@ export default {
       e1: 1,
       chatogrupo: this.$props.tipo,
       chats: [],
+      grupos: [],
       mensajes: [],
       chatseleccionado: null,
 
