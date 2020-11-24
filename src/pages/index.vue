@@ -14,39 +14,23 @@
         />
 
 </div>
-<div class="paralelo">
+
+
+
+<v-layout row wrap>
+  <v-flex xs12 sm12>
  <v-parallax
     height="500"
-    
-    src="https://i.picsum.photos/id/1015/6000/4000.jpg?hmac=aHjb0fRa1t14DTIEBcoC12c5rAXOSwnVlaA5ujxPQ0I"
-  ></v-parallax>
+ 
+    src="https://i.picsum.photos/id/209/1920/1280.jpg?hmac=VkEKEKhTEKOSFL4n-N4aLnbGGpV5hxuCs2tx_ny4y5g"
+  ><h1 class="display-4 font-weight-black text-right titulo" justify="end">Tus chats en Smartlabs</h1></v-parallax>
 
-</div>
-
+  </v-flex>
+</v-layout>
 </div>
 </template>
 
-<style scoped>
 
-.paralelo {
-  width: 100%;
-}
-
-
-.presentacion {
-
-  display: flex;
-  justify-content: center;
-  height: 100vh;
-   width:60%; 
-   margin: auto;
-
-   padding-top: 250px;
-   padding-right: 70px;
-
-}
-
-</style>
 
 
 
@@ -71,5 +55,28 @@ img {
   display:block;
     margin:auto;
 
+}
+
+.paralelo {
+  width: 100%;
+  margin: 0px;
+}
+
+
+.presentacion {
+
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+   width:60%; 
+   margin: auto;
+
+   padding-top: 250px;
+   padding-right: 70px;
+
+}
+
+h1.titulo {
+  color: red;
 }
 </style>

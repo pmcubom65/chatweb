@@ -94,7 +94,7 @@
                           color="green"
                           :content="item.MENSAJESSINLEER"
                         >
-                        <v-icon>mdi-account-multiple-outline</v-icon>
+                          <v-icon>mdi-account-multiple-outline</v-icon>
                         </v-badge>
                       </div>
                       <v-list-item-title class="headline mb-1">
@@ -118,8 +118,7 @@
                       >SELECCIONAR</v-btn
                     >
 
-
-                         <v-btn
+                    <v-btn
                       outlined
                       rounded
                       text
@@ -164,6 +163,7 @@
           <div class="d-flex">
             <div>
               <v-text-field
+                id="mytext"
                 v-model="mensajeescrito"
                 label="Enviar Mensaje"
               ></v-text-field>
@@ -183,7 +183,8 @@
             </div>
 
             <div>
-              <v-btn class="mx-2" fab dark large color="red">
+              <mi-dialogo :dialog.sync="dialog"></mi-dialogo>
+              <v-btn class="mx-2" fab dark large color="red" @click="abrirdialogo">
                 <v-icon dark> mdi-upload </v-icon>
               </v-btn>
             </div>
@@ -199,12 +200,12 @@
 
 <script>
 import axios from "axios";
+import MiDialogo from "./MIDialogo";
 import Mensaje from "./Mensaje.vue";
-import { bus } from "../main";
 
 export default {
   name: "Mistepper",
-  components: { Mensaje },
+  components: { Mensaje, MiDialogo },
 
   mounted() {
     if (this.$props.tipo) {
@@ -230,19 +231,45 @@ export default {
           console.log(error);
         });
     }
+
+    this.myVar = setInterval(() => {
+      this.iniciarChat();
+    }, 3000);
+
+    console.log("intervalo del vue " + this.myVar);
   },
 
   created() {
-    bus.$on("fotousuario", (data) => {
+    this.$bus.$on("fotousuario", (data) => {
       console.log("foto del usuario " + data);
       this.foto = data;
     });
   },
 
+  watch: {},
+
   methods: {
     tarjetaid: function (CODIGO) {
       return "tarjeta" + CODIGO;
     },
+
+  //    openMyDialog : function() {
+   //     this.$bus.$emit('dialog', true) // emit the event to the bus
+
+  //    },
+
+      abrirdialogo: function() {
+        this.dialog=true;
+
+        var parametros= {
+            chatid: this.chatseleccionado.CODIGO,
+            idusuariorecepcion: this.chatseleccionado.TELEFONO,
+        };
+
+
+        this.$bus.$emit('dialog', parametros)
+
+      },
 
     cambiarcolor: function (telefono) {
       if (telefono === this.$route.params.id.split("&&")[0]) {
@@ -254,6 +281,9 @@ export default {
 
     volveratras: function () {
       this.chatseleccionado = null;
+      clearInterval(this.myVar);
+      console.log("intervalo limpio " + this.myVar);
+
       this.e1 = 1;
     },
 
@@ -302,6 +332,8 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+
+        document.getElementById("mytext").focus();
       }
     },
 
@@ -395,8 +427,10 @@ export default {
       grupos: [],
       mensajes: [],
       chatseleccionado: null,
-
+      myVar: "",
       mensajeescrito: "",
+
+      dialog: false,
 
       foto: "",
     };

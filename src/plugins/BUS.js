@@ -1,3 +1,9 @@
 import Vue from 'vue'
 
-export const BUS = new Vue();
+const BUS = new Vue();
+
+export default {
+    install (Vue) {
+      Vue.prototype.$bus = BUS
+    }
+  }

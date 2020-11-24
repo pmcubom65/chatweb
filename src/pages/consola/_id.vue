@@ -23,7 +23,7 @@
 <script>
 import axios from "axios";
 import Mitab from "../../components/Mitab.vue";
-import {bus} from '../../main'
+
 
 import Router from '../../router';
 
@@ -56,7 +56,7 @@ export default {
         console.log(response);
         this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
 
-         bus.$emit('fotousuario', this.valor)
+         this.$bus.$emit('fotousuario', this.valor)
 
       })
       .catch(function (error) {
