@@ -1,5 +1,6 @@
 <template>
-  <v-card>
+
+  <v-card  class="fade-in">
       <v-toolbar
       color="primary"
       height="90"
@@ -48,6 +49,7 @@
       </v-tab-item>
     </v-tabs-items>
   </v-card>
+
 </template>
 
 
@@ -90,4 +92,7 @@ export default {
 .v-tab--active {
   background-color: rgba(167, 15, 15, 0.603);
 }
+
+
+
 </style>

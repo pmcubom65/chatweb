@@ -175,6 +175,7 @@
               <v-text-field
                 v-model="mensajeescrito"
                 label="Enviar Mensaje"
+                id="textomensaje"
               ></v-text-field>
             </div>
 
@@ -255,9 +256,12 @@ export default {
 
     this.myVar = setInterval(() => {
       this.iniciarChat();
+    
     }, 3000);
 
-    console.log("intervalo del vue " + this.myVar);
+    window.onscroll= function(event){
+        this.primeravez=false;
+    }
   },
 
   created() {
@@ -284,8 +288,8 @@ export default {
       this.dialog = true;
 
       var parametros = {
-        chatid: this.chatseleccionado.CODIGO,
-        idusuariorecepcion: this.chatseleccionado.TELEFONO,
+        chatid: this.chatseleccionado.CODIGO!=null ? this.chatseleccionado.CODIGO : this.chatseleccionado.ID,
+        idusuariorecepcion: this.chatseleccionado.TELEFONO!=null ? this.chatseleccionado.TELEFONO : this.chatseleccionado.MIEMBROS,
       };
 
       this.$bus.$emit("dialog", parametros);
@@ -354,6 +358,7 @@ export default {
     },
 
     iniciarChat: function () {
+
       if (this.chatseleccionado != null) {
         this.e1 = 2;
 
@@ -383,6 +388,22 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+
+
+        if (this.primeravez){
+        var elmnt = document.getElementById("textomensaje");
+
+        console.log(elmnt)
+
+        document.getElementById("textomensaje").focus();
+
+   
+
+        }
+
+
+
+
       }
     },
 
@@ -511,6 +532,10 @@ export default {
 
       foto: "",
       hacerscroll: true,
+
+      primeravez: true,
+
+      
     };
   },
 };

@@ -124,11 +124,34 @@ export default {
         var m = miDate
           .toISOString()
           .slice(0, 19)
-          .replace(/-/g, "/")
+          .replace(/-/g, "-")
           .replace("T", " ");
 
+        console.log(miDate);
+
+       if (!(Array.isArray(this.idusuariorecepcion))){
+
+              this.peticionAxios(contenidoarchivo, m, this.idusuariorecepcion);
+
+       }else {
+
+         for (var u=0; u<this.idusuariorecepcion.length; u++){
+
+
+              this.peticionAxios(contenidoarchivo, m, this.idusuariorecepcion[u].TELEFONO);
+
+         }
+
+
+       }
           
-            axios
+      
+
+
+    },
+
+    peticionAxios : function(contenidoarchivo, m, usuariorecepcion) {
+                  axios
           .post("http://localhost:54119/api/smartchat/almacenarimagen", {
             IMAGEN: contenidoarchivo,
             ID: this.$route.params.id.split("&&")[2],
@@ -136,7 +159,7 @@ export default {
             DIA: m,
             EXTENSION: this.nombredelarchivo.split(".")[1],
             EMISOR: this.$route.params.id.split("&&")[0],
-            RECEPTOR: this.idusuariorecepcion
+            RECEPTOR: usuariorecepcion
           })
           .then((response) => {
             console.log(response);
@@ -149,9 +172,11 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-
-
     },
+
+
+
+
 
     onChange() {
       this.filelist = [...this.$refs.file.files];
