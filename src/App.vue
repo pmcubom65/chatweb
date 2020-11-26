@@ -9,10 +9,14 @@
     >
       <div class="d-flex align-center">
 
+        <div v-bind:class="{ 'midisplay': estalogado }">
+
         <v-btn icon @click.stop="drawer = !drawer">
 
         <v-icon>mdi-apps</v-icon>
         </v-btn>
+
+        </div>
 
 
       <router-link to="/">
@@ -50,15 +54,17 @@
       <v-navigation-drawer
       v-model="drawer"
       absolute
+       width="30%"
       temporary
     >
+
       <v-list-item>
         <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/men/78.jpg"></v-img>
+          <v-img :src="fotousuario"></v-img>
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>John Leider</v-list-item-title>
+          <v-list-item-title>{{miusuario.NOMBRE}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -79,6 +85,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
     </v-navigation-drawer>
 
 
@@ -106,16 +113,38 @@ export default {
   components: { Mifooter },
 
 
+  mounted() {
 
+    this.$bus.$on("menunavegacion", (data) => {
+  
+
+        this.estalogado=false;
+        this.miusuario=data;
+
+    });
+
+
+    this.$bus.$on("fotousuario", (data) => {
+      this.fotousuario = data.replace("//", "/");
+  
+    });
+
+
+  },
 
 
   data() {
   return {
     logo: require('@/assets/logo.png'),
+    estalogado : true,
       drawer: null,
+      miusuario: {},
+      fotousuario: '',
         items: [
-          { title: 'Home', icon: 'mdi-view-dashboard', action: "test" },
-          { title: 'About', icon: 'mdi-forum' , action: "logout"},
+          { title: 'Inicio', icon: 'mdi-view-dashboard', action: "test" },
+          { title: 'Mis Contactos', icon: 'mdi-forum' , action: "contactos"},
+          { title: 'Añadir Contactos', icon: 'mdi-account-check' , action: "Acontactos"},
+          { title: 'Crear Grupo', icon: 'mdi-account-multiple-plus' , action: "cgrupo"},
         ],
   }
 },
@@ -139,6 +168,8 @@ methods: {
 };
 </script>
 
-<style>
-
+<style scoped>
+.midisplay {
+  display: none;
+}
 </style>

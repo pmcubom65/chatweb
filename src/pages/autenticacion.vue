@@ -112,6 +112,8 @@ export default {
             Router.push({
               path: `consola/${miusuario.TELEFONO}&&${miusuario.NOMBRE}&&${miusuario.ID}&&${miusuario.TOKEN}`,
             });
+
+            this.$bus.$emit("menunavegacion", miusuario);
           }
         })
         .catch((error) =>{
