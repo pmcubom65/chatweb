@@ -1,5 +1,11 @@
 <template>
   <v-card>
+      <v-toolbar
+      color="primary"
+      height="90"
+      dark
+      flat
+    >
     <v-tabs
       v-model="tab"
       background-color="primary"
@@ -7,18 +13,20 @@
       dark
       icons-and-text
     >
-      <v-tabs-slider></v-tabs-slider>
+      <v-tabs-slider  color="yellow"></v-tabs-slider>
 
       <v-tab href="#chats">
         MIS CHATS
-        <v-icon>mdi-account</v-icon>
+        <v-icon x-large>mdi-account</v-icon>
       </v-tab>
 
       <v-tab href="#grupos">
         MIS GRUPOS
-        <v-icon>mdi-account-multiple</v-icon>
+        <v-icon x-large>mdi-account-multiple</v-icon>
       </v-tab>
     </v-tabs>
+
+        </v-toolbar>
 
     <v-tabs-items v-model="tab">
       <v-tab-item :key="1" value="chats">
@@ -76,3 +84,10 @@ export default {
 
 };
 </script>
+
+
+<style scoped>
+.v-tab--active {
+  background-color: rgba(167, 15, 15, 0.603);
+}
+</style>

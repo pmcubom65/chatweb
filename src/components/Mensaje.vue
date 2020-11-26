@@ -5,7 +5,7 @@
     </v-card-title>
 
     <v-card-text class="headline font-weight-bold">
-      {{ ponercontenidomensaje }}
+      <div v-html="ponercontenidomensaje"></div>
     </v-card-text>
 
     <v-card-actions>
@@ -78,20 +78,31 @@ export default {
 
   computed: {
     ponercontenidomensaje: function () {
+
       if (this.contenido != null) {
-        return this.contenido;
+        
+         return `<span> ${this.contenido} </span>`   
+      
       } else {
-        return (
-          "https://smartchat.smartlabs.es/" +
+
+        var cadenaarchivo= (
+          "https://smartchat.smartlabs.es" +
           this.archivoruta[0].RUTA.replace(/\\/g, "/")
             .replace("//", "")
             .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
             .replace("//", "/")
         );
-        
-     
-        
+
+        var nombrearchivo=cadenaarchivo.substring(cadenaarchivo.lastIndexOf("/")+1);
+
+        return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`   
+
+
+
       }
+
+
+
     },
   },
 };

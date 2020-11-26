@@ -114,16 +114,19 @@
                       rounded
                       text
                       color="primary"
-                      @click="seleccionado(item, chats)"
+                      :id="tarjetaid(item.ID)"
+                      @click="seleccionadogrupo(item, grupos)"
                       >SELECCIONAR</v-btn
                     >
-
+                    <dialogo-miembros
+                      :dialog.sync="dialogomiembros"
+                    ></dialogo-miembros>
                     <v-btn
                       outlined
                       rounded
                       text
                       color="primary"
-                      @click="seleccionado(item, chats)"
+                      @click="abrirdialogomiembros(item.MIEMBROS)"
                       >MIEMBROS</v-btn
                     >
                   </v-card-actions>
@@ -138,10 +141,17 @@
           :disabled="chatseleccionado == null"
           @click="iniciarChat()"
         >
+          <v-icon large color="white darken-2">
+            mdi-checkbox-marked-circle
+          </v-icon>
+
           Iniciar
         </v-btn>
 
-        <v-btn :disabled="e1 == 1" text> Volver </v-btn>
+        <v-btn :disabled="e1 == 1" depressed color="primary">
+          <v-icon large color="white darken-2"> mdi-arrow-left-bold </v-icon
+          >Volver
+        </v-btn>
       </v-stepper-content>
 
       <v-stepper-content step="2">
@@ -163,7 +173,6 @@
           <div class="d-flex">
             <div>
               <v-text-field
-                id="mytext"
                 v-model="mensajeescrito"
                 label="Enviar Mensaje"
               ></v-text-field>
@@ -178,20 +187,31 @@
                 color="red"
                 @click="mandarMensaje"
               >
-                <v-icon dark> mdi-pencil </v-icon>
+                <v-icon dark> mdi-send </v-icon>
               </v-btn>
             </div>
 
             <div>
               <mi-dialogo :dialog.sync="dialog"></mi-dialogo>
-              <v-btn class="mx-2" fab dark large color="red" @click="abrirdialogo">
+              <v-btn
+                class="mx-2"
+                fab
+                dark
+                large
+                color="red"
+                @click="abrirdialogo"
+              >
                 <v-icon dark> mdi-upload </v-icon>
               </v-btn>
             </div>
           </div>
         </v-card>
 
-        <v-btn text @click="volveratras"> Volver </v-btn>
+        <v-btn depressed color="primary" @click="volveratras">
+          <v-icon large color="white darken-2"> mdi-arrow-left-bold </v-icon>
+
+          Volver
+        </v-btn>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -201,11 +221,12 @@
 <script>
 import axios from "axios";
 import MiDialogo from "./MIDialogo";
+import DialogoMiembros from "./DialogoMiembros";
 import Mensaje from "./Mensaje.vue";
 
 export default {
   name: "Mistepper",
-  components: { Mensaje, MiDialogo },
+  components: { Mensaje, MiDialogo, DialogoMiembros, DialogoMiembros },
 
   mounted() {
     if (this.$props.tipo) {
@@ -241,8 +262,8 @@ export default {
 
   created() {
     this.$bus.$on("fotousuario", (data) => {
-      console.log("foto del usuario " + data);
-      this.foto = data;
+      this.foto = data.replace("//", "/");
+      console.log("foto del usuario " + this.foto);
     });
   },
 
@@ -253,23 +274,22 @@ export default {
       return "tarjeta" + CODIGO;
     },
 
-  //    openMyDialog : function() {
-   //     this.$bus.$emit('dialog', true) // emit the event to the bus
+    abrirdialogomiembros: function (miembros) {
+      this.dialogomiembros = true;
 
-  //    },
+      this.$bus.$emit("dialogomiembros", miembros);
+    },
 
-      abrirdialogo: function() {
-        this.dialog=true;
+    abrirdialogo: function () {
+      this.dialog = true;
 
-        var parametros= {
-            chatid: this.chatseleccionado.CODIGO,
-            idusuariorecepcion: this.chatseleccionado.TELEFONO,
-        };
+      var parametros = {
+        chatid: this.chatseleccionado.CODIGO,
+        idusuariorecepcion: this.chatseleccionado.TELEFONO,
+      };
 
-
-        this.$bus.$emit('dialog', parametros)
-
-      },
+      this.$bus.$emit("dialog", parametros);
+    },
 
     cambiarcolor: function (telefono) {
       if (telefono === this.$route.params.id.split("&&")[0]) {
@@ -285,6 +305,26 @@ export default {
       console.log("intervalo limpio " + this.myVar);
 
       this.e1 = 1;
+      this.hacerscroll = true;
+      window.scrollTo(0, 0);
+    },
+
+    seleccionadogrupo: function (item, grupos) {
+      var buscagrupo = "tarjeta" + item.ID;
+
+      document.getElementById(buscagrupo).style.backgroundColor = "#FA8072";
+
+      for (var i = 0; i < grupos.length; i++) {
+        var quitar = "tarjeta" + grupos[i].ID;
+
+        if (!(quitar === buscagrupo)) {
+          console.log(quitar);
+          console.log(buscagrupo);
+          document.getElementById(quitar).style.backgroundColor = "#FFFFFF";
+        }
+      }
+
+      this.chatseleccionado = item;
     },
 
     seleccionado: function (item, lista) {
@@ -295,8 +335,6 @@ export default {
         var quitar = "tarjeta" + lista[i].CODIGO;
 
         if (!(quitar === buscarel)) {
-          console.log(quitar);
-          console.log(buscarel);
           document.getElementById(quitar).style.backgroundColor = "#FFFFFF";
         }
       }
@@ -317,23 +355,34 @@ export default {
 
     iniciarChat: function () {
       if (this.chatseleccionado != null) {
-        var buscarel = "tarjeta" + this.chatseleccionado.CODIGO;
-        document.getElementById(buscarel).style.backgroundColor = "#FFFFFF";
-
         this.e1 = 2;
+
+        var micodigo =
+          this.chatseleccionado.CODIGO != null
+            ? this.chatseleccionado.CODIGO
+            : this.chatseleccionado.ID;
 
         axios
           .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
-            codigo: this.chatseleccionado.CODIGO,
+            codigo: micodigo,
           })
           .then((response) => {
-            this.mensajes = response.data.mensajes;
+            var dataArr = response.data.mensajes.map((item) => {
+              return [item.DIA, item];
+            }); // creates array of array
+            var maparr = new Map(dataArr); // create key value pair from array of array
+
+            var result = [...maparr.values()]; //converting back to array from mapobject
+
+            console.log("EL ARRAY DE MENSAJES " + result); //[{"name":"abc","age":27},{"name":"pqr","age":27}]
+
+             //   this.mensajes = response.data.mensajes;
+
+            this.mensajes = result;
           })
           .catch(function (error) {
             console.log(error);
           });
-
-        document.getElementById("mytext").focus();
       }
     },
 
@@ -341,58 +390,85 @@ export default {
       this.e1 = 2;
 
       if (this.mensajeescrito.length > 0) {
-        var tzoffset = new Date().getTimezoneOffset() * 60000;
-        var m = new Date()
+        var tzoffset = new Date().getTimezoneOffset();
+        var miDate = new Date(Date.now() - (tzoffset*60*1000));
+
+        var m = miDate
           .toISOString()
           .slice(0, 19)
           .replace(/-/g, "/")
           .replace("T", " ");
 
-        axios
-          .post("http://localhost:54119/api/smartchat/crearmensaje", {
-            contenido: this.mensajeescrito,
-            usuarioid: this.$route.params.id.split("&&")[0],
-            chatid: this.chatseleccionado.CODIGO,
-            dia: m,
-            idusuariorecepcion: this.chatseleccionado.TELEFONO,
-          })
-          .then((response) => {
-            console.log(response.data.mensajes);
-            this.mensajeescrito = "";
 
-            this.iniciarChat();
+        var micodigo =
+          this.chatseleccionado.CODIGO != null
+            ? this.chatseleccionado.CODIGO
+            : this.chatseleccionado.ID;
 
-            this.mandarnotificacion();
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        if (this.chatseleccionado.CODIGO != null) {
+          this.enviamensajeaxios(micodigo, m, this.chatseleccionado, false);
+        } else {
+          for (
+            var miembro = 0;
+            miembro < this.chatseleccionado.MIEMBROS.length;
+            miembro++
+          ) {
+            this.enviamensajeaxios(
+              micodigo,
+              m,
+              this.chatseleccionado.MIEMBROS[miembro],
+              true
+            );
+          }
+        }
+        this.mensajeescrito = "";
+
+        this.iniciarChat();
       }
     },
 
-    mandarnotificacion: function () {
+    enviamensajeaxios: function (micodigo, m, receptor, esgrupoono) {
+      axios
+        .post("http://localhost:54119/api/smartchat/crearmensaje", {
+          contenido: this.mensajeescrito,
+          usuarioid: this.$route.params.id.split("&&")[0],
+          chatid: micodigo,
+          dia: m,
+          idusuariorecepcion: receptor.TELEFONO,
+        })
+        .then((response) => {
+          console.log(response.data.mensajes);
+
+          this.mandarnotificacion(micodigo, receptor, esgrupoono);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    mandarnotificacion: function (micodigo, receptor, esgrupoono) {
       var jdata = {
-        michatid: this.chatseleccionado.CODIGO,
+        michatid: micodigo,
         titulo: this.mensajeescrito,
-        fotoreceptor: this.chatseleccionado.RUTA,
+        fotoreceptor: receptor.RUTA,
 
         fotoemisor: this.foto,
 
-        tokenaenviar: this.chatseleccionado.TOKEN,
+        tokenaenviar: receptor.TOKEN,
         tokenemisor: this.$route.params.id.split("&&")[3],
         nombreemisor: this.$route.params.id.split("&&")[1],
-        nombrereceptor: this.chatseleccionado.NOMBRE,
+        nombrereceptor: receptor.NOMBRE,
         telefonoemisor: this.$route.params.id.split("&&")[0],
-        telefonoreceptor: this.chatseleccionado.TELEFONO,
+        telefonoreceptor: receptor.TELEFONO,
 
-        esgrupo: false,
+        esgrupo: esgrupoono,
       };
 
       axios
         .post(
           "https://fcm.googleapis.com/fcm/send",
           {
-            to: this.chatseleccionado.TOKEN,
+            to: receptor.TOKEN,
             priority: "high",
             data: jdata,
           },
@@ -431,8 +507,10 @@ export default {
       mensajeescrito: "",
 
       dialog: false,
+      dialogomiembros: false,
 
       foto: "",
+      hacerscroll: true,
     };
   },
 };
@@ -450,5 +528,24 @@ export default {
 
 .v-text-field {
   width: 1400px;
+  font-size: 15pt !important;
+}
+
+.v-btn {
+  margin-right: 20px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .v-text-field {
+    width: 500px;
+    font-size: 15pt !important;
+  }
+}
+
+@media only screen and (max-width: 1600px) {
+  .v-text-field {
+    width: 800px;
+    font-size: 15pt !important;
+  }
 }
 </style>

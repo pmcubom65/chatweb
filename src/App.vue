@@ -1,4 +1,5 @@
 <template>
+
   <v-app>
     <v-app-bar
       app
@@ -27,6 +28,12 @@
       </div>
 
       <v-spacer></v-spacer>
+
+      <v-btn
+         @click="miscroll"
+      ><span class="mr-2">Código qr</span>
+        <v-icon>mdi-open-in-new</v-icon>
+      </v-btn>
 
       <v-btn
         to="/autenticacion"
@@ -84,11 +91,13 @@
 
     </v-main>
   </v-app>
+
 </template>
 
 <script>
 
 import Mifooter from './components/Mifooter.vue';
+import Router from './router';
 
 
 export default {
@@ -118,7 +127,18 @@ methods: {
 
     logout : function() {
     console.log(accion);
+  },
+
+  miscroll : function() {
+
+    this.$bus.$emit("realizarscroll");
   }
+
+
 }
 };
 </script>
+
+<style>
+
+</style>

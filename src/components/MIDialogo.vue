@@ -19,7 +19,9 @@
               @dragover="dragover"
               @dragleave="dragleave"
               @drop="drop"
-            >
+            ><v-icon  size="300"
+            v-bind:style=" hayarchivo ? 'display: none;' : 'display: block;' "
+            color="primary" >mdi-cloud-upload</v-icon>
               <input
                 type="file"
                 multiple
@@ -116,13 +118,16 @@ export default {
 
     crearmensajeconarchivo: function(contenidoarchivo) {
 
-        var tzoffset = new Date().getTimezoneOffset() * 60000;
-        var m = new Date()
+          var tzoffset = new Date().getTimezoneOffset();
+        var miDate = new Date(Date.now() - (tzoffset*60*1000));
+
+        var m = miDate
           .toISOString()
           .slice(0, 19)
-          .replace(/-/g, "-")
+          .replace(/-/g, "/")
           .replace("T", " ");
 
+          
             axios
           .post("http://localhost:54119/api/smartchat/almacenarimagen", {
             IMAGEN: contenidoarchivo,
@@ -169,6 +174,7 @@ export default {
     },
     drop(event) {
       event.preventDefault();
+      this.hayarchivo=true;
       this.$refs.file.files = event.dataTransfer.files;
       this.onChange(); // Trigger the onChange event manually
       // Clean up
@@ -187,7 +193,8 @@ export default {
       filelist: [],
       chatid: '',
       idusuariorecepcion: '',
-      nombredelarchivo: ''
+      nombredelarchivo: '',
+      hayarchivo: false
     };
   },
 };
@@ -212,6 +219,7 @@ ul {
 
   margin: 100px auto;
   padding: 20px;
+
 }
 #drop-area.highlight {
   border-color: red;
@@ -225,4 +233,14 @@ ul {
   display: flex;
   flex-direction: row;
 }
+
+.mdi-cloud-upload {
+  margin-left: 90px;
+}
+
+.v-btn--text {
+  font-size: 15pt !important;
+}
+
+
 </style>

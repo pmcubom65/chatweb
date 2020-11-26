@@ -19,5 +19,9 @@
 }
 
 
+.theme--light.v-application {
+  background-color: #ffe5ea !important;
+}
+
 
 </style>
