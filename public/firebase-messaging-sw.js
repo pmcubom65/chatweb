@@ -1,6 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/8.0.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.0.0/firebase-messaging.js');
-import Bus from '../src/plugins/BUS'
+
 
 firebase.initializeApp({
     apiKey: "AIzaSyB6dfdXWNCnIlxDHtsRN3Dc1mfDhLf2wyg",
@@ -28,7 +28,6 @@ messaging.onBackgroundMessage(function(payload) {
     self.registration.showNotification(notificationTitle,
       notificationOptions);
 
-      Bus.$emit("uo");
   });
 
 

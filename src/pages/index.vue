@@ -63,20 +63,6 @@ export default {
 
 
     });
-    console.log('click')
-     const messaging= fire.messaging();
-
-    messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-    // ...
-  });
-
-
-
-      this.$bus.$on("uo", ()=>{
-        console.log("uooooooo")
-      })
-
   },
 
   methods : {
