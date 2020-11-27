@@ -6,8 +6,11 @@ import vuetify from './plugins/vuetify'
 import Bus from './plugins/BUS'
 
 
+
 Vue.config.productionTip = false
 Vue.use(Bus)
+
+
 
 new Vue({
   router,

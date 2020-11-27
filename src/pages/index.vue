@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <div id="espacio"></div>
+      <div id="espacio"><button @click="hazclick()" >click me</button></div>
       <div
         class="presentacion"
         :style="{
@@ -44,8 +44,12 @@
 
 <script>
 import Autenticacionqr from "../components/Autenticacionqr.vue";
+import fire from "../firebase";
+
 
 export default {
+  
+
   components: { Autenticacionqr },
 
 
@@ -59,6 +63,31 @@ export default {
 
 
     });
+    console.log('click')
+     const messaging= fire.messaging();
+
+    messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    // ...
+  });
+
+
+
+      this.$bus.$on("uo", ()=>{
+        console.log("uooooooo")
+      })
+
+  },
+
+  methods : {
+    hazclick : function() {
+      console.log('click')
+     const messaging= fire.messaging();
+      messaging.requestPermission();
+    const token = messaging.getToken().then((data)=>{console.log(data)});
+    console.log('token do usuário:', token);
+    
+    }
   },
 
   data() {
