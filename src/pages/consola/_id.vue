@@ -23,7 +23,7 @@
 <script>
 import axios from "axios";
 import Mitab from "../../components/Mitab.vue";
-
+import fire from "../../firebase";
 
 import Router from '../../router';
 
@@ -44,24 +44,60 @@ export default {
     };
   },
 
+
+  methods: {
+    crearUsuario: function(valortoken){
+                 axios
+        .post("http://localhost:54119/api/smartchat/crearusuarioconemail", {
+          nombre: this.nombre,
+          email: this.telefono,
+          token: valortoken,
+        })
+        .then((response) => {
+          console.log('usuario grabado')
+          console.log(response);
+
+      })
+    }
+  },
+
   mounted :  function() {
 
+      const messaging= fire.messaging();
+      messaging.requestPermission();
+      const token = messaging.getToken().then((data)=>{console.log(data)});
+
+      token.then(data=>{
+
+          this.crearUsuario(data);
+
+      });
+
+   
+
+
        axios
-      .post("http://localhost:54119/api/smartchat/buscarusuario", {
-        telefono: this.telefono,
-        id: this.id
+      .post("http://localhost:54119/api/smartchat/buscarUsuarioConEmail", {
+        telefono: this.telefono
       })
       .then((response)=> {
 
         console.log(response);
-        this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
 
-         this.$bus.$emit('fotousuario', this.valor)
+        if (response.data.codigo==2){
+          this.crearUsuario(this.telefono);
+        }else {
+
+
+             this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
+
+             this.$bus.$emit('fotousuario', this.valor)
+        }
 
       })
       .catch(function (error) {
         console.log(error);
-        return null;
+      
       });
 
 

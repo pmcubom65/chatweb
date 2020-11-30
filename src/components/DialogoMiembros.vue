@@ -38,6 +38,7 @@ export default {
 
   mounted() {
     this.$bus.$on("dialogomiembros", (parametros) => {
+
       this.miembros = parametros;
     });
   },

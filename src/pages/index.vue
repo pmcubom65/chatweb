@@ -112,7 +112,7 @@ img {
   display: flex;
   justify-content: center;
   height: 100vh;
-  width: 60%;
+  width: 80%;
   margin: auto;
 
   padding-top: 100px;
@@ -122,7 +122,7 @@ img {
 
 
 @media screen and (max-width: 1500px) {
-  .presentacion, .espacio {
+  .presentacion, #espacio {
 
     display: none;
   }

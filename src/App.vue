@@ -56,6 +56,7 @@
       absolute
        width="30%"
       temporary
+      
     >
 
       <v-list-item>
@@ -86,6 +87,11 @@
         </v-list-item>
       </v-list>
 
+ 
+         <dialogo-usuarios-chat :dialogousuarios.sync="dialogu"></dialogo-usuarios-chat>
+
+         <dialogo-amigos :dialogoamigos.sync="dialogoamigo"></dialogo-amigos>
+
     </v-navigation-drawer>
 
 
@@ -105,12 +111,15 @@
 
 import Mifooter from './components/Mifooter.vue';
 import Router from './router';
-
+import MiDialogo from "./components/DialogoUsuariosChat";
+import DialogoUsuariosChat from './components/DialogoUsuariosChat.vue';
+import DialogoAmigos from './components/DialogoAmigos.vue';
+import axios from "axios";
 
 export default {
 
   name: 'App',
-  components: { Mifooter },
+  components: { Mifooter, DialogoUsuariosChat, DialogoUsuariosChat, DialogoAmigos },
 
 
   mounted() {
@@ -130,6 +139,17 @@ export default {
     });
 
 
+      axios
+      .post("http://localhost:54119/api/smartchat/buscarcontactosweb", {})
+      .then((response)=> {
+
+                     
+        this.usuarioschat=response.data.MIEMBROS;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
   },
 
 
@@ -140,18 +160,47 @@ export default {
       drawer: null,
       miusuario: {},
       fotousuario: '',
+      dialousuarioschat: false,
+      dialogoamigo: false,
+      usuarioschat: [],
+      dialogu: false,
         items: [
-          { title: 'Inicio', icon: 'mdi-view-dashboard', action: "test" },
-          { title: 'Mis Contactos', icon: 'mdi-forum' , action: "contactos"},
-          { title: 'Añadir Contactos', icon: 'mdi-account-check' , action: "Acontactos"},
-          { title: 'Crear Grupo', icon: 'mdi-account-multiple-plus' , action: "cgrupo"},
+          { title: 'Inicio', icon: 'mdi-view-dashboard', action: "inicio" },
+          { title: 'Mis Contactos', icon: 'mdi-forum' , action: "miscontactos"},
+          { title: 'Buscar Contactos', icon: 'mdi-account-check' , action: "buscarcontactos"},
+          { title: 'Crear Grupo', icon: 'mdi-account-multiple-plus' , action: "creargrupo"},
         ],
   }
 },
 
 methods: {
  menuActionClick : function(accion) {
-    console.log(accion);
+
+    switch (accion) {
+
+      case "inicio":
+           console.log("inicio");
+        break;
+
+      case "miscontactos":
+         console.log("miscontactos");
+         this.dialogoamigo=true;
+         
+        break;
+
+       case "buscarcontactos":
+       
+            this.dialogu = true;
+            this.$bus.$emit("dialousuarioschat", this.usuarioschat, this.miusuario);
+ 
+        break;
+
+        case "creargrupo":
+           console.log("creargrupo");
+        break;
+    }
+
+
   },
 
     logout : function() {
