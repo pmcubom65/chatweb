@@ -93,7 +93,7 @@ export default {
 }
 
 #espacio {
-  width: 350px;
+  width: 10vw;
 }
 
 img {
@@ -112,7 +112,7 @@ img {
   display: flex;
   justify-content: center;
   height: 100vh;
-  width: 80%;
+  width: 55vw;
   margin: auto;
 
   padding-top: 100px;

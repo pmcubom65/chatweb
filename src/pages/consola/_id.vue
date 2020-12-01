@@ -7,7 +7,7 @@
     <div>
       <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
 
-      <h3 class="font-italic">Número de telefono: {{telefono}}</h3>
+      <h3 class="font-italic">Email: {{telefono}}</h3>
     </div>
 
 
@@ -65,13 +65,14 @@ export default {
 
       const messaging= fire.messaging();
       messaging.requestPermission();
-      const token = messaging.getToken().then((data)=>{console.log(data)});
-
-      token.then(data=>{
-
-          this.crearUsuario(data);
-
+      const token = messaging.getToken().then((data)=>{
+        setTimeout(()=>{
+          console.log(data);
+      this.crearUsuario(data)
+        },3000);
       });
+
+    
 
    
 
@@ -88,8 +89,13 @@ export default {
           this.crearUsuario(this.telefono);
         }else {
 
+              if (response.data.RUTA.length>0){
+                   this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
+              }else {
+                this.valor="https://i.picsum.photos/id/151/4288/3216.jpg?hmac=JivxjfdKJyVImNz441oXhdQzbKCO6Ko_m9th03i_T0M"
+              }
 
-             this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
+         
 
              this.$bus.$emit('fotousuario', this.valor)
         }

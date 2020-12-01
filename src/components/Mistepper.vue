@@ -30,18 +30,25 @@
                   max-width="344"
                   outlined
                   class="pa-2 lastarjetaschats"
-                  :id="tarjetaid(item.CODIGO)"
+                  :id="tarjetaid(item.ID)"
                 >
                   <v-list-item three-line>
                     <v-list-item-content>
                       <div class="overline mb-4">
-                        Inicio {{ item.INICIO.replace("T", " ") }}
+                        Inicio: {{ item.INICIO.replace("T", " ") }}
                       </div>
-                      <v-list-item-title class="headline mb-1">
+                      <v-list-item-title class="headline mb-1 text-wrap">
                         {{ item.NOMBRE }}
+
+                        <v-badge
+                          v-if="item.MENSAJESSINLEER > 0"
+                          color="green"
+                          :content="item.MENSAJESSINLEER"
+                        >
+                        </v-badge>
                       </v-list-item-title>
                       <v-list-item-subtitle
-                        >Telefono {{ item.TELEFONO }}</v-list-item-subtitle
+                        >Email {{ item.TELEFONO }}</v-list-item-subtitle
                       >
                     </v-list-item-content>
 
@@ -231,7 +238,7 @@ export default {
 
   mounted() {
     if (this.$props.tipo) {
-      axios
+      /*   axios
         .post("http://localhost:54119/api/smartchat/detallesmischats", {
           telefono: this.$route.params.id.split("&&")[0],
         })
@@ -240,7 +247,13 @@ export default {
         })
         .catch(function (error) {
           console.log(error);
-        });
+        });*/
+
+      this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
+        this.chats = parametros;
+
+        // this.idprop=parametros2.ID;
+      });
     } else {
       axios
         .post("http://localhost:54119/api/smartchat/misgrupos", {
@@ -255,13 +268,12 @@ export default {
     }
 
     this.myVar = setInterval(() => {
-      this.iniciarChat();
-    
+      this.chatyacreado(this.chatactualizando);
     }, 3000);
 
-    window.onscroll= function(event){
-        this.primeravez=false;
-    }
+    window.onscroll = function (event) {
+      this.primeravez = false;
+    };
   },
 
   created() {
@@ -278,6 +290,21 @@ export default {
       return "tarjeta" + CODIGO;
     },
 
+    cargarAmigosStepper: function (elidusuario) {
+      axios
+        .post("http://localhost:54119/api/smartchat/mostraramigos", {
+          idpropietario: elidusuario,
+        })
+        .then((response) => {
+          console.log("amigos " + response.data.MIEMBROS);
+
+          this.chats = response.data.MIEMBROS;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
     abrirdialogomiembros: function (miembros) {
       this.dialogomiembros = true;
 
@@ -288,8 +315,14 @@ export default {
       this.dialog = true;
 
       var parametros = {
-        chatid: this.chatseleccionado.CODIGO!=null ? this.chatseleccionado.CODIGO : this.chatseleccionado.ID,
-        idusuariorecepcion: this.chatseleccionado.TELEFONO!=null ? this.chatseleccionado.TELEFONO : this.chatseleccionado.MIEMBROS,
+        chatid:
+          this.chatseleccionado.CODIGO != null
+            ? this.chatseleccionado.CODIGO
+            : this.chatseleccionado.ID,
+        idusuariorecepcion:
+          this.chatseleccionado.TELEFONO != null
+            ? this.chatseleccionado.TELEFONO
+            : this.chatseleccionado.MIEMBROS,
       };
 
       this.$bus.$emit("dialog", parametros);
@@ -304,6 +337,13 @@ export default {
     },
 
     volveratras: function () {
+      this.ponercomoleidos(this.chatactualizando);
+      var buscarelt = "tarjeta" + this.chatseleccionado.ID;
+      this.primeravez = true;
+      document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
+
+      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+
       this.chatseleccionado = null;
       clearInterval(this.myVar);
       console.log("intervalo limpio " + this.myVar);
@@ -311,13 +351,24 @@ export default {
       this.e1 = 1;
       this.hacerscroll = true;
       window.scrollTo({
-        top: 0, 
-        left: 0, 
-        behavior: 'smooth'
+        top: 0,
+        left: 0,
+        behavior: "smooth",
       });
+    },
 
-
-
+    ponercomoleidos: function (numerochat) {
+      axios
+        .post("http://localhost:54119/api/smartchat/ponercomoleidos", {
+          idpropietario: this.$route.params.id.split("&&")[2],
+          codigochat: numerochat,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     seleccionadogrupo: function (item, grupos) {
@@ -339,11 +390,11 @@ export default {
     },
 
     seleccionado: function (item, lista) {
-      var buscarel = "tarjeta" + item.CODIGO;
+      var buscarel = "tarjeta" + item.ID;
       document.getElementById(buscarel).style.backgroundColor = "#FA8072";
 
       for (var i = 0; i < lista.length; i++) {
-        var quitar = "tarjeta" + lista[i].CODIGO;
+        var quitar = "tarjeta" + lista[i].ID;
 
         if (!(quitar === buscarel)) {
           document.getElementById(quitar).style.backgroundColor = "#FFFFFF";
@@ -365,53 +416,83 @@ export default {
     },
 
     iniciarChat: function () {
-
       if (this.chatseleccionado != null) {
         this.e1 = 2;
 
         var micodigo =
-          this.chatseleccionado.CODIGO != null
+          typeof this.chatseleccionado.CODIGO !== "undefined"
             ? this.chatseleccionado.CODIGO
             : this.chatseleccionado.ID;
 
-        axios
-          .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
-            codigo: micodigo,
-          })
-          .then((response) => {
-            var dataArr = response.data.mensajes.map((item) => {
-              return [item.DIA, item];
-            }); // creates array of array
-            var maparr = new Map(dataArr); // create key value pair from array of array
+        this.chatactualizando = micodigo;
 
-            var result = [...maparr.values()]; //converting back to array from mapobject
-
-            console.log("EL ARRAY DE MENSAJES " + result); //[{"name":"abc","age":27},{"name":"pqr","age":27}]
-
-             //   this.mensajes = response.data.mensajes;
-
-            this.mensajes = result;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-
-
-        if (this.primeravez){
-        var elmnt = document.getElementById("textomensaje");
-
-        console.log(elmnt)
-
-        document.getElementById("textomensaje").focus();
-
-   
-
+        if (micodigo == "") {
+          this.crearChat();
+        } else {
+          this.chatyacreado(micodigo);
         }
 
-
-
-
+        if (this.primeravez) {
+          window.scrollTo({
+            top: 1000000,
+            left: 0,
+            behavior: "smooth",
+          });
+        }
       }
+    },
+
+    crearChat: function () {
+      console.log("hay que crear un chat");
+
+      var tzoffset = new Date().getTimezoneOffset();
+      var miDate = new Date(Date.now() - tzoffset * 60 * 1000);
+
+      var m = miDate
+        .toISOString()
+        .slice(0, 19)
+        .replace(/-/g, "/")
+        .replace("T", " ");
+
+      var codigodelchat = Date.now();
+
+      axios
+        .post("http://localhost:54119/api/smartchat/crearchat", {
+          codigo: codigodelchat,
+          inicio: m,
+        })
+        .then((response) => {
+          this.chatseleccionado.CODIGO = codigodelchat;
+
+          this.chatyacreado(response.data.codigo);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    chatyacreado: function (valorchat) {
+      axios
+        .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
+          codigo: valorchat,
+        })
+        .then((response) => {
+          console.log(response);
+
+          var dataArr = response.data.mensajes.map((item) => {
+            return [item.DIA, item];
+          }); // creates array of array
+          var maparr = new Map(dataArr); // create key value pair from array of array
+
+          var result = [...maparr.values()]; //converting back to array from mapobject
+
+          //   this.mensajes = response.data.mensajes;
+
+          this.mensajes = result;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     mandarMensaje: function () {
@@ -419,14 +500,13 @@ export default {
 
       if (this.mensajeescrito.length > 0) {
         var tzoffset = new Date().getTimezoneOffset();
-        var miDate = new Date(Date.now() - (tzoffset*60*1000));
+        var miDate = new Date(Date.now() - tzoffset * 60 * 1000);
 
         var m = miDate
           .toISOString()
           .slice(0, 19)
           .replace(/-/g, "/")
           .replace("T", " ");
-
 
         var micodigo =
           this.chatseleccionado.CODIGO != null
@@ -536,13 +616,12 @@ export default {
 
       dialog: false,
       dialogomiembros: false,
+      chatactualizando: "",
 
       foto: "",
       hacerscroll: true,
 
       primeravez: true,
-
-      
     };
   },
 };
@@ -565,6 +644,10 @@ export default {
 
 .v-btn {
   margin-right: 20px;
+}
+
+.v-badge {
+  margin-left: 0.7rem !important;
 }
 
 @media only screen and (max-width: 1000px) {

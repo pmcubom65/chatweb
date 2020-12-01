@@ -22,6 +22,7 @@
             ><v-icon  size="300"
             v-bind:style=" hayarchivo ? 'display: none;' : 'display: block;' "
             color="primary" >mdi-cloud-upload</v-icon>
+
               <input
                 type="file"
                 multiple
@@ -40,7 +41,7 @@
                   v-bind:key="file.id"
                 >
                   <v-icon large color="red darken-2">mdi-content-save</v-icon>
-                  <h2 class="mt-3 ml-3 mr-12 pr-12">{{ file.name }}</h2>
+                  <h2 class="mt-3 ml-3 mr-12 pr-12">{{ file[0].name }}</h2>
 
                   <v-btn
                     class="mx-2 ml-12"
@@ -61,7 +62,7 @@
           <v-spacer></v-spacer>
           <v-btn color="red" text @click.native="close">Cancelar</v-btn>
 
-          <v-btn color="purple" text @click.native="subirarchivo">Subir</v-btn>
+          <v-btn color="purple" text @click.native="subirarchivo" :disabled="noarchivos">Subir</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -81,6 +82,10 @@ export default {
         this.chatid=parametros.chatid;
         this.idusuariorecepcion=parametros.idusuariorecepcion;
 
+
+        console.log('chat id '+this.chatid);
+        console.log('idusuariorecepcion '+this.idusuariorecepcion);
+
     });
   },
 
@@ -96,14 +101,22 @@ export default {
 
     subirarchivo: function () {
 
+      console.log('no llegakkkk')
+
+      if (this.filelist.length>1 && this.chatid.length==0){
+
+
+        this.alertafotoperfil="Solo puede adjuntar un archivo como foto de perfil"
+
+      }else {
 
       for (var j = 0; j < this.filelist.length; j++) {
         var reader = new FileReader();
-        reader.readAsDataURL(this.filelist[j]);
+        reader.readAsDataURL(this.filelist[j][0]);
 
-        console.log(this.filelist[j].name);
+        console.log(this.filelist[j][0].name);
 
-        this.nombredelarchivo=this.filelist[j].name;
+        this.nombredelarchivo=this.filelist[j][0].name;
     
 
       reader.onload = () => {
@@ -114,6 +127,9 @@ export default {
 
       }
             this.$emit("update:dialog", false);
+      }
+
+
     },
 
     crearmensajeconarchivo: function(contenidoarchivo) {
@@ -178,7 +194,15 @@ export default {
 
 
     onChange() {
-      this.filelist = [...this.$refs.file.files];
+          console.log(this.$refs.file.files)
+      this.filelist.push(this.$refs.file.files)
+
+      for (var u=0; u<this.filelist.length; u++){
+          console.log('???? '+u+' '+this.filelist[u])
+      }
+
+      
+     
     },
     remove(i) {
       this.filelist.splice(i, 1);
@@ -198,14 +222,12 @@ export default {
     },
     drop(event) {
       event.preventDefault();
+      this.noarchivos=false;
       this.hayarchivo=true;
       this.$refs.file.files = event.dataTransfer.files;
       this.onChange(); // Trigger the onChange event manually
       // Clean up
 
-      console.log("drop");
-
-      console.log(this.filelist);
 
       event.currentTarget.classList.add("bg-gray-100");
       event.currentTarget.classList.remove("bg-green-300");
@@ -218,7 +240,9 @@ export default {
       chatid: '',
       idusuariorecepcion: '',
       nombredelarchivo: '',
-      hayarchivo: false
+      hayarchivo: false,
+      noarchivos: true,
+      alertafotoperfil: ''
     };
   },
 };

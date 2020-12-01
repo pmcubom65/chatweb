@@ -41,7 +41,6 @@
 
       <v-btn
         to="/autenticacion"
-        target="_blank"
         text
       >
         <span class="mr-2">Iniciar Autenticación</span>
@@ -54,7 +53,8 @@
       <v-navigation-drawer
       v-model="drawer"
       absolute
-       width="30%"
+       width="20%"
+       :src="require('@/assets/fondorojonegro.jpg')"
       temporary
       
     >
@@ -65,11 +65,11 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title>{{miusuario.NOMBRE}}</v-list-item-title>
+          <v-list-item-title class="white--text">{{miusuario.NOMBRE}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider  class="white--text"></v-divider>
 
       <v-list dense>
         <v-list-item @click="menuActionClick(item.action)"
@@ -78,11 +78,11 @@
           link
         >
           <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon  class="white--text">{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title  class="white--text">{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -91,6 +91,7 @@
          <dialogo-usuarios-chat :dialogousuarios.sync="dialogu"></dialogo-usuarios-chat>
 
          <dialogo-amigos :dialogoamigos.sync="dialogoamigo"></dialogo-amigos>
+                 <mi-dialogo :dialog.sync="dialogofoto"></mi-dialogo>
 
     </v-navigation-drawer>
 
@@ -111,15 +112,16 @@
 
 import Mifooter from './components/Mifooter.vue';
 import Router from './router';
-import MiDialogo from "./components/DialogoUsuariosChat";
+
 import DialogoUsuariosChat from './components/DialogoUsuariosChat.vue';
 import DialogoAmigos from './components/DialogoAmigos.vue';
+import MiDialogo from './components/MIDialogo';
 import axios from "axios";
 
 export default {
 
   name: 'App',
-  components: { Mifooter, DialogoUsuariosChat, DialogoUsuariosChat, DialogoAmigos },
+  components: { Mifooter, DialogoUsuariosChat, DialogoUsuariosChat, DialogoAmigos, MiDialogo },
 
 
   mounted() {
@@ -150,6 +152,7 @@ export default {
         console.log(error);
       });
 
+
   },
 
 
@@ -162,13 +165,16 @@ export default {
       fotousuario: '',
       dialousuarioschat: false,
       dialogoamigo: false,
+      dialogofoto: false,
       usuarioschat: [],
       dialogu: false,
         items: [
           { title: 'Inicio', icon: 'mdi-view-dashboard', action: "inicio" },
+           { title: 'Subir Foto de Perfil', icon: 'mdi-clippy' , action: "subirfoto"},
           { title: 'Mis Contactos', icon: 'mdi-forum' , action: "miscontactos"},
           { title: 'Buscar Contactos', icon: 'mdi-account-check' , action: "buscarcontactos"},
           { title: 'Crear Grupo', icon: 'mdi-account-multiple-plus' , action: "creargrupo"},
+         { title: 'Añadir usuario a un grupo', icon: 'mdi-account-multiple-plus' , action: "anadirusuariogrupo"},
         ],
   }
 },
@@ -182,10 +188,23 @@ methods: {
            console.log("inicio");
         break;
 
+      case "subirfoto":
+
+      this.dialogofoto = true;
+
+      var parametros = {
+        chatid: '',
+        idusuariorecepcion: '',
+      };
+
+      this.$bus.$emit("dialog", parametros);
+
+        break;
+
       case "miscontactos":
          console.log("miscontactos");
          this.dialogoamigo=true;
-         
+ 
         break;
 
        case "buscarcontactos":
@@ -221,4 +240,24 @@ methods: {
 .midisplay {
   display: none;
 }
+
+
+ .v-list-item__title {
+  font-size: 1.3em !important;
+  padding: 0.5rem;
+ 
+}
+
+.v-list-item__content:hover {
+  background-color: red;
+}
+
+
+.v-list-item__icon {
+  font-size: 1.3em;
+  padding: 0.5rem;
+ 
+}
+
+
 </style>

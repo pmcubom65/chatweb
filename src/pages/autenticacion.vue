@@ -77,7 +77,8 @@ export default {
     return {
       password: "",
       telefono: "",
-      respuesta: ""
+      respuesta: "",
+      amigos: []
     };
   },
 
@@ -109,8 +110,11 @@ export default {
               TOKEN: tokenusuario,
             };
 
+          
+
             console.log("mi usuario es " + miusuario);
             this.$bus.$emit("menunavegacion", miusuario);
+            this.cargarAmigos(idusuario)
 
             Router.push({
               path: `consola/${miusuario.TELEFONO}&&${miusuario.NOMBRE}&&${miusuario.ID}&&${miusuario.TOKEN}`,
@@ -124,6 +128,25 @@ export default {
           this.respuesta = error;
         });
     },
+
+
+    cargarAmigos: function(elidusuario) {
+            axios
+      .post("http://localhost:54119/api/smartchat/mostraramigos", {
+        idpropietario : elidusuario
+      })
+      .then((response)=> {
+
+        console.log('amigos '+response.data.MIEMBROS)
+
+        this.amigos=response.data.MIEMBROS    
+        this.$bus.$emit("dialogoamigo", this.amigos, this.miusuario);        
+      
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
 
   },
 };

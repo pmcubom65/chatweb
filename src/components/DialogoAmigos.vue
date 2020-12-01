@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialogoamigos" width="700px">
+    <v-dialog v-model="dialogoamigos" width="900px">
       <v-card>
         <v-app-bar dark color="primary">
           <v-toolbar-title>Lista de Contactos</v-toolbar-title>
@@ -9,26 +9,41 @@
         </v-app-bar>
 
         <v-card-text>
-          <v-list shaped v-for="item in usuarios" v-bind:key="item.id">
+            <v-layout justify-center>
+   <v-row no-gutters>
+              <v-card
+              width="344"
+              class="mx-auto"
+              v-for="item in contactosamigos" v-bind:key="item.id"
+              >
+
+
             <v-list-item>
-              <v-list-item-icon>
+            <v-list-item-avatar color="grey"></v-list-item-avatar>
+                        <v-badge
+                          v-if="item.MENSAJESSINLEER > 0"
+                          color="green"
+                          :content="item.MENSAJESSINLEER"
+                        >
+                        
+                        </v-badge>
                  
-               <v-icon size="25"> mdi-account-circle</v-icon>
-              </v-list-item-icon>
 
               <v-list-item-content>
-                <v-list-item-title class="font-weight-black">{{ item.NOMBRE }}</v-list-item-title>
-                <v-list-item-subtitle> </v-list-item-subtitle>
 
-            
+                   <v-list-item-title class="headline">{{item.NOMBRE}}</v-list-item-title>
+                   <v-list-item-subtitle>{{item.EMAIL}}</v-list-item-subtitle>
+           
 
-               <v-btn
-            elevation="2"
-                >Añadir a Contactos</v-btn>
-
+  
               </v-list-item-content>
             </v-list-item>
-          </v-list>
+        
+
+              </v-card>
+
+   </v-row>
+            </v-layout>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -48,6 +63,27 @@ import axios from "axios";
 
 export default {
   name: "DialogoAmigos",
+
+ mounted() {
+       this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
+
+         console.log("dialogoamigo "+parametros)
+
+      this.contactosamigos = parametros;
+
+  
+
+    });
+ },
+
+  methods: {
+       close: function () {
+      this.$emit("update:dialogoamigos", false);
+    },
+
+  },
+
+
   props: {
     dialogoamigos: {
       default: false,
@@ -55,10 +91,18 @@ export default {
   },
   data() {
     return {
-      usuarios: [],
+      contactosamigos: [],
       idprop: ''
     };
   },
 
 }
 </script>
+
+
+<style scoped>
+.v-card .v-sheet {
+  margin-top: 1.5rem;
+
+}
+</style>
