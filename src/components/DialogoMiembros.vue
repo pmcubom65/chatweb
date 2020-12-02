@@ -69,6 +69,8 @@ export default {
 
           return rutawebfinal.slice(0, -1);
 
+      } else {
+        return 'https://smartchat.smartlabs.es/img/anonimos/No_image.jpg';
       }
     },
   },

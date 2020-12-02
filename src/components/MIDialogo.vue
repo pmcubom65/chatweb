@@ -101,9 +101,7 @@ export default {
 
     subirarchivo: function () {
 
-      console.log('no llegakkkk')
-
-      if (this.filelist.length>1 && this.chatid.length==0){
+       if (this.filelist.length>1 && this.chatid.length==0){
 
 
         this.alertafotoperfil="Solo puede adjuntar un archivo como foto de perfil"
@@ -179,6 +177,8 @@ export default {
           })
           .then((response) => {
             console.log(response);
+
+            this.filelist=[];
             
             //    this.mandarnotificacion();
 

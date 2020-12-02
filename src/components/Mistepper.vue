@@ -61,7 +61,7 @@
                     <img
                       height="80px"
                       v-else
-                      src="https://picsum.photos/id/1/200/300"
+                      src="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg"
                     />
                   </v-list-item>
 
@@ -213,6 +213,7 @@
               </v-btn>
             </div>
           </div>
+   
         </v-card>
 
         <v-btn depressed color="primary" @click="volveratras">
@@ -584,7 +585,7 @@ export default {
             headers: {
               "content-type": "application/json",
               authorization:
-                "key=AAAAafa8PTg:APA91bEafAQa2vygzlPALqd72Dik0BflDS7b-hCraAwZvzAkK-hLHsohWvsN1C5kHSSym3pdZx5M63COhYBPosP7Icu-JDXguENKkH3fvXco4CXroInSeLadlujJKpUrqoROt1ttGiW0",
+                "key=AAAALyC3imA:APA91bGkws5JZsuIBDS0FCwzNb-Jsd9rtoAD5hdkAXfLZNvPGFAPWcshRfAoBmcoXi7EUxjKfKCeSpYf2i0NCMCzIfoOciLJohPQ-XANf_BriOXlJX0JPF-P1RBkuxs64a-maZG3IJb9",
             },
           }
         )

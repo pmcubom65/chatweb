@@ -92,7 +92,7 @@ export default {
               if (response.data.RUTA.length>0){
                    this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
               }else {
-                this.valor="https://i.picsum.photos/id/151/4288/3216.jpg?hmac=JivxjfdKJyVImNz441oXhdQzbKCO6Ko_m9th03i_T0M"
+                this.valor="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg";
               }
 
          

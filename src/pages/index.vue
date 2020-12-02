@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <div id="espacio"><button @click="hazclick()" >click me</button></div>
+      <div id="espacio"></div>
       <div
         class="presentacion"
         :style="{

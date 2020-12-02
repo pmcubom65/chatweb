@@ -19,9 +19,9 @@ messaging.getToken().then(data=>console.log('serviceworker '+data))
 messaging.onBackgroundMessage(function(payload) {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
     // Customize notification here
-    const notificationTitle = 'Background Message Title';
+    const notificationTitle = 'Notificación del chat';
     const notificationOptions = {
-      body: 'Background Message body.',
+      body: 'Notificación del chat',
       icon: '/favicon.ico'
     };
   
