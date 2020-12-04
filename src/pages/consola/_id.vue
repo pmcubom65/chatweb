@@ -1,9 +1,10 @@
 <template>
 <div>
   <div class="cabecera d-flex">
-        <div class="image-cropper">
-     <img :src="valor" class="rounded">
-    </div>
+
+
+    <imagenaqui :laurl="valor"></imagenaqui>
+
     <div>
       <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
 
@@ -58,12 +59,15 @@ import axios from "axios";
 import Mitab from "../../components/Mitab.vue";
 import fire from "../../firebase";
 
+import Imagenaqui from '../../components/Imagenaqui'
+
 import Router from '../../router';
 
 import DialogoResumenNoLeidos from '../../components/DialogoResumenNoLeidos'
 
+
 export default {
-  components: { Mitab, DialogoResumenNoLeidos },
+  components: { Mitab, DialogoResumenNoLeidos, Imagenaqui},
 
   name: "consola",
 
@@ -170,7 +174,7 @@ resumennoleidos: function(idpropietarioid) {
 
      this.$bus.$on("fotousuario", (data) => {
 
-         this.valor = data;
+         this.valor = 'https:/smartchat.smartlabs.es/img2/anonimos/No_image.jpg';
 
       console.log('valloooor '+this.valor)
   
