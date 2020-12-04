@@ -8,10 +8,43 @@
       <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
 
       <h3 class="font-italic">Email: {{telefono}}</h3>
+      
     </div>
 
 
+
+      <div if="Integer.parseInt(numero)>0"  >
+
+     <v-chip
+      class="ma-2 animate__animated animate__bounce animate__repeat-3"
+      color="primary"
+      text-color="white"
+      x-large
+       @click="miresumen"
+       
+    >
+      {{numero}} 
+      <v-icon right>
+            mdi-forum
+      </v-icon>
+    </v-chip>
+
+
+
+
+   
+    </div>
+
+
+
+
+
+
   </div>
+
+  
+  <dialogo-resumen-no-leidos :noleidos.sync="dialonoleidos"  :idpropietario="id"></dialogo-resumen-no-leidos>
+
 
   
     <div class="panel">
@@ -27,8 +60,10 @@ import fire from "../../firebase";
 
 import Router from '../../router';
 
+import DialogoResumenNoLeidos from '../../components/DialogoResumenNoLeidos'
+
 export default {
-  components: { Mitab },
+  components: { Mitab, DialogoResumenNoLeidos },
 
   name: "consola",
 
@@ -40,15 +75,50 @@ export default {
       telefono: this.$route.params.id.split("&&")[0],
       id: this.$route.params.id.split("&&")[2],
       valor: '',
+        dialonoleidos: false,
+      noleidosresumendatos: Array,
+      numero: ''
       
     };
   },
 
 
   methods: {
+
+
+
+
+
+    miresumen: function() {
+
+    this.dialonoleidos = true;
+
+
+    },
+
+    escribioalguien: function() {
+
+        if (typeof this.noleidosresumendatos.mensajesnoleidos== "undefined") {
+
+          return this.noleidosresumendatos.mensajesnoleidos.length>0;
+
+        }else {
+
+          return false;
+
+        }
+
+        
+
+
+    },
+
+
+
+
     crearUsuario: function(valortoken){
                  axios
-        .post("http://localhost:54119/api/smartchat/crearusuarioconemail", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearusuarioconemail", {
           nombre: this.nombre,
           email: this.telefono,
           token: valortoken,
@@ -57,42 +127,104 @@ export default {
           console.log('usuario grabado')
           console.log(response);
 
+
       })
-    }
+    },
+
+resumennoleidos: function(idpropietarioid) {
+
+
+   axios
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/noleidosresumen", {
+        idpropietario: idpropietarioid
+      })
+      .then((response)=> {
+
+        console.log(response);
+
+ 
+        this.$bus.$emit("mismensajesnoleidos", response.data)
+
+
+        this.numero=response.data.mensajesnoleidos.length
+
+     //   this.noleidosresumendatos=response.data.mensajesnoleidos;
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      
+      });
+
+
+
+}
+
+
   },
 
   mounted :  function() {
 
-      const messaging= fire.messaging();
+
+
+     this.$bus.$on("fotousuario", (data) => {
+
+         this.valor = data;
+
+      console.log('valloooor '+this.valor)
+  
+    });
+
+
+
+
+
+
+
+
+
+       setInterval(() => {
+      this.resumennoleidos(this.id);
+     
+    }, 1000);
+
+
+
+
+
+
+
+  /*    const messaging= fire.messaging();
       messaging.requestPermission();
       const token = messaging.getToken().then((data)=>{
         setTimeout(()=>{
           console.log(data);
       this.crearUsuario(data)
         },3000);
-      });
+      });*/
 
-    
-
-   
-
-
-       axios
-      .post("http://localhost:54119/api/smartchat/buscarUsuarioConEmail", {
+   /*    axios
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarUsuarioConEmail", {
         telefono: this.telefono
       })
       .then((response)=> {
 
+        
+
         console.log(response);
 
         if (response.data.codigo==2){
+
+            
+
           this.crearUsuario(this.telefono);
         }else {
 
               if (response.data.RUTA.length>0){
                    this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
               }else {
-                this.valor="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg";
+                this.valor="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
               }
 
          
@@ -104,7 +236,7 @@ export default {
       .catch(function (error) {
         console.log(error);
       
-      });
+      });*/
 
 
       }
@@ -152,4 +284,6 @@ img.rounded {
   height: 100px;
   width: 100px;
 }
+
+
 </style>

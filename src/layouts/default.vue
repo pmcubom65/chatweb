@@ -23,5 +23,10 @@
   background-color: #ffe5ea !important;
 }
 
+.v-application--wrap, .v-main, .v-application--is-ltr {
+  height: 100vh !important;
+
+}
+
 
 </style>

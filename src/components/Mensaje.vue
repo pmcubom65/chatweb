@@ -1,4 +1,5 @@
 <template>
+
   <v-card class="mx-auto" :color="micolor" dark min-width="400">
     <v-card-title>
       <span class="title font-weight-light">{{ dia.replace("T", " ") }}</span>
@@ -46,8 +47,19 @@ export default {
 
   props: {
     mensaje: Object,
-    chat: Object,
-    color: String,
+    chat: {
+
+      type: Object,
+      required: false
+
+
+    },
+    color: {
+      
+      type: String,
+      required: false,
+      default: '#FF0000'
+  }
   },
   data() {
     return {
@@ -58,6 +70,8 @@ export default {
       archivoruta: this.$props.mensaje.ARCHIVOS,
 
       micolor: this.$props.color,
+
+
     };
   },
   methods: {

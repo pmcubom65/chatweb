@@ -96,6 +96,7 @@ export default {
   },
   methods: {
     close: function () {
+            this.hayarchivo= false;
       this.$emit("update:dialog", false);
     },
 
@@ -160,13 +161,13 @@ export default {
        }
           
       
-
+        this.hayarchivo= false;
 
     },
 
     peticionAxios : function(contenidoarchivo, m, usuariorecepcion) {
                   axios
-          .post("http://localhost:54119/api/smartchat/almacenarimagen", {
+          .post("https://sdi2.smartlabs.es:30002/api/smartchat/almacenarimagen", {
             IMAGEN: contenidoarchivo,
             ID: this.$route.params.id.split("&&")[2],
             CHAT_ID: this.chatid,

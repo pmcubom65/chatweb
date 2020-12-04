@@ -27,7 +27,7 @@
                   <img
                     height="80px"
                     v-else
-                    src="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg"
+                    src="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg"
                   />
                   <v-badge
                     v-if="item.MENSAJESSINLEER > 0"
@@ -154,7 +154,7 @@ export default {
 
 
       axios
-        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: nombregrupog,
         })

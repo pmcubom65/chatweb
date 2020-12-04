@@ -20,11 +20,19 @@
       <v-stepper-content step="1">
         <v-card class="mb-12" color="red lighten-5">
           <v-layout justify-center v-if="chatogrupo">
-            <v-container
+
+            <v-container v-if="chats.length==0 && ver">
+               <v-btn color="info" large @click="abrirdialogousuarioschat"> <v-icon dark>mdi-comment-account</v-icon>Añadir Contactos</v-btn>
+            </v-container>
+           
+
+            <v-container v-else
               v-for="item in chats"
               v-bind:key="item.id"
               class="grey lighten-5 mb-6"
             >
+
+         
               <v-row no-gutters>
                 <v-card
                   max-width="344"
@@ -61,7 +69,7 @@
                     <img
                       height="80px"
                       v-else
-                      src="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg"
+                      src="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg"
                     />
                   </v-list-item>
 
@@ -78,6 +86,7 @@
                 </v-card>
               </v-row>
             </v-container>
+          
           </v-layout>
 
           <v-layout justify-center v-else>
@@ -168,7 +177,7 @@
             v-bind:key="item.id"
             class="d-flex mensajecontainer"
           >
-            <div>
+            <div id="cajitas">
               <mensaje
                 :mensaje="item"
                 :chat="chatseleccionado"
@@ -221,9 +230,11 @@
 
           Volver
         </v-btn>
+              <dialogo-usuarios-chat :dialogousuarios.sync="dialogu"></dialogo-usuarios-chat>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
+  
 </template>
 
 
@@ -231,33 +242,23 @@
 import axios from "axios";
 import MiDialogo from "./MIDialogo";
 import DialogoMiembros from "./DialogoMiembros";
+import DialogoUsuariosChat from './DialogoUsuariosChat'
 import Mensaje from "./Mensaje.vue";
+
 
 export default {
   name: "Mistepper",
-  components: { Mensaje, MiDialogo, DialogoMiembros, DialogoMiembros },
+  components: { Mensaje, MiDialogo, DialogoMiembros, DialogoMiembros, DialogoUsuariosChat },
 
   mounted() {
     if (this.$props.tipo) {
-      /*   axios
-        .post("http://localhost:54119/api/smartchat/detallesmischats", {
-          telefono: this.$route.params.id.split("&&")[0],
-        })
-        .then((response) => {
-          this.chats = response.data.chats;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });*/
 
-      this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
-        this.chats = parametros;
 
-        // this.idprop=parametros2.ID;
-      });
+      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2])
+
     } else {
       axios
-        .post("http://localhost:54119/api/smartchat/misgrupos", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
           telefono: this.$route.params.id.split("&&")[0],
         })
         .then((response) => {
@@ -272,9 +273,24 @@ export default {
       this.chatyacreado(this.chatactualizando);
     }, 3000);
 
+
+  
+
+    if (this.primeravez){
     window.onscroll = function (event) {
       this.primeravez = false;
     };
+    }
+
+
+
+
+    this.$bus.$on("actualizarstepper", () => {
+
+      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+
+
+    });
   },
 
   created() {
@@ -291,9 +307,44 @@ export default {
       return "tarjeta" + CODIGO;
     },
 
+    
+
+    abrirdialogousuarioschat: function(){
+
+            axios
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb", {})
+      .then((response)=> {
+
+                     
+        this.usuarioschat=response.data.MIEMBROS;
+
+        var miusuarioo= {
+          TELEFONO : this.$route.params.id.split("&&")[0],
+          NOMBRE: this.$route.params.id.split("&&")[1],
+          ID: this.$route.params.id.split("&&")[2],
+          TOKEN: this.$route.params.id.split("&&")[3],
+        }
+
+       
+
+        this.dialogu = true;
+        this.$bus.$emit("dialousuarioschat", this.usuarioschat, miusuarioo);
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+
+
+
+    },
+
     cargarAmigosStepper: function (elidusuario) {
       axios
-        .post("http://localhost:54119/api/smartchat/mostraramigos", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
           idpropietario: elidusuario,
         })
         .then((response) => {
@@ -360,7 +411,7 @@ export default {
 
     ponercomoleidos: function (numerochat) {
       axios
-        .post("http://localhost:54119/api/smartchat/ponercomoleidos", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidos", {
           idpropietario: this.$route.params.id.split("&&")[2],
           codigochat: numerochat,
         })
@@ -433,13 +484,18 @@ export default {
           this.chatyacreado(micodigo);
         }
 
-        if (this.primeravez) {
+        if (this.primeravez && this.mensajes>3) {
+
+          
           window.scrollTo({
-            top: 1000000,
+            top: document.documentElement.scrollHeight,
             left: 0,
             behavior: "smooth",
+
           });
-        }
+
+
+             }
       }
     },
 
@@ -458,7 +514,7 @@ export default {
       var codigodelchat = Date.now();
 
       axios
-        .post("http://localhost:54119/api/smartchat/crearchat", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
           codigo: codigodelchat,
           inicio: m,
         })
@@ -474,7 +530,7 @@ export default {
 
     chatyacreado: function (valorchat) {
       axios
-        .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat", {
           codigo: valorchat,
         })
         .then((response) => {
@@ -498,6 +554,7 @@ export default {
 
     mandarMensaje: function () {
       this.e1 = 2;
+      this.primeravez=false;
 
       if (this.mensajeescrito.length > 0) {
         var tzoffset = new Date().getTimezoneOffset();
@@ -538,7 +595,7 @@ export default {
 
     enviamensajeaxios: function (micodigo, m, receptor, esgrupoono) {
       axios
-        .post("http://localhost:54119/api/smartchat/crearmensaje", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearmensaje", {
           contenido: this.mensajeescrito,
           usuarioid: this.$route.params.id.split("&&")[0],
           chatid: micodigo,
@@ -548,7 +605,7 @@ export default {
         .then((response) => {
           console.log(response.data.mensajes);
 
-          this.mandarnotificacion(micodigo, receptor, esgrupoono);
+    //      this.mandarnotificacion(micodigo, receptor, esgrupoono);
         })
         .catch(function (error) {
           console.log(error);
@@ -614,10 +671,13 @@ export default {
       chatseleccionado: null,
       myVar: "",
       mensajeescrito: "",
-
+      usuarioschat: [],
       dialog: false,
       dialogomiembros: false,
+      dialogu: false,
       chatactualizando: "",
+
+      ver: this.$props.tipo,
 
       foto: "",
       hacerscroll: true,
@@ -633,6 +693,9 @@ export default {
 .mensajecontainer {
   margin-bottom: 20px;
 }
+
+
+
 
 .red {
   background-color: #ffffff;
@@ -657,6 +720,7 @@ export default {
     font-size: 15pt !important;
   }
 }
+
 
 @media only screen and (max-width: 1600px) {
   .v-text-field {

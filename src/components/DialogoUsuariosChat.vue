@@ -20,10 +20,10 @@
                 <v-list-item-title class="font-weight-black">{{ item.NOMBRE }}</v-list-item-title>
                 <v-list-item-subtitle>{{ item.EMAIL }}</v-list-item-subtitle>
 
-                <v-list-item-subtitle class="novisible red--text font-weight-bold" :id="seleccionado(item.EMAIL)">Contacto añadido con éxito</v-list-item-subtitle>
+                <v-list-item-subtitle class="novisible red--text font-weight-bold" :id="seleccionado(item.EMAIL)">{{respuestadd}}</v-list-item-subtitle>
 
                <v-btn
-            elevation="2" @click="contactoanadido(item)" :id="botonseleccionado(item.EMAIL)"
+            elevation="2" @click="contactoanadido(item)" :id="botonseleccionado(item.EMAIL)" 
                 >Añadir a Contactos</v-btn>
 
               </v-list-item-content>
@@ -76,11 +76,12 @@ export default {
 
 
     close: function () {
+      this.respuestadd='';
       this.$emit("update:dialogousuarios", false);
     },
     contactoanadido: function(item){
             axios
-      .post("http://localhost:54119/api/smartchat/anadiramigo", {
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
 
           emailamigo: item.EMAIL,
            idpropietario: this.idprop
@@ -88,15 +89,28 @@ export default {
 
       })
       .then((response)=> {
-         
+
         this.usuarioschat=response.data.MIEMBROS;
         var elementoseleccionado = "seleccionado" + item.EMAIL;
         var botonseleccionado='botonseleccionado'+item.EMAIL;
 
         console.log(response);
-
         document.getElementById(botonseleccionado).style.display = 'none';
         document.getElementById(elementoseleccionado).style.display = 'block';
+
+
+        if (response.data.codigo==2){
+
+            this.respuestadd='El usuario no se ha dado de alta en la aplicación. Usuario no añadido a contactos';
+
+        }else {
+         
+          this.respuestadd='Contacto añadido con éxito';
+
+          this.$bus.$emit("actualizarstepper");
+
+
+        }
     
       })
       .catch(function (error) {
@@ -116,7 +130,8 @@ export default {
   data() {
     return {
       usuarios: [],
-      idprop: ''
+      idprop: '',
+      respuestadd: ''
     };
   },
 };

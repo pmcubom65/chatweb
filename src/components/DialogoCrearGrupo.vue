@@ -52,7 +52,7 @@
                   <img
                     height="80px"
                     v-else
-                    src="https://smartchat.smartlabs.es/img/anonimos/No_image.jpg"
+                    src="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg"
                   />
 
                   <h6 class="title">{{ item.NOMBRE }}</h6>
@@ -164,7 +164,7 @@ export default {
 
     creargrupo: function () {
       axios
-        .post("http://localhost:54119/api/smartchat/creargrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/creargrupo", {
           nombre: this.nombregrupo,
         })
         .then((response) => {
@@ -209,7 +209,7 @@ export default {
         .replace("T", " ");
 
       axios
-        .post("http://localhost:54119/api/smartchat/crearchat", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
           codigo: codigochat,
           inicio: m,
         })
@@ -231,7 +231,7 @@ export default {
 
     anadiragrupo: function (email) {
       axios
-        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: this.nombregrupo,
         })
