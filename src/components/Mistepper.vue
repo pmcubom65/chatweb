@@ -20,19 +20,18 @@
       <v-stepper-content step="1">
         <v-card class="mb-12" color="red lighten-5">
           <v-layout justify-center v-if="chatogrupo">
-
-            <v-container v-if="chats.length==0 && ver">
-               <v-btn color="info" large @click="abrirdialogousuarioschat"> <v-icon dark>mdi-comment-account</v-icon>Añadir Contactos</v-btn>
+            <v-container v-if="chats.length == 0 && ver">
+              <v-btn color="info" large @click="abrirdialogousuarioschat">
+                <v-icon dark>mdi-comment-account</v-icon>Añadir Contactos</v-btn
+              >
             </v-container>
-           
 
-            <v-container v-else
+            <v-container
+              v-else
               v-for="item in chats"
               v-bind:key="item.id"
               class="grey lighten-5 mb-6"
             >
-
-         
               <v-row no-gutters>
                 <v-card
                   max-width="344"
@@ -86,7 +85,6 @@
                 </v-card>
               </v-row>
             </v-container>
-          
           </v-layout>
 
           <v-layout justify-center v-else>
@@ -170,7 +168,7 @@
         </v-btn>
       </v-stepper-content>
 
-      <v-stepper-content step="2">
+      <v-stepper-content step="2" class="estestepper">
         <v-card class="mb-12 pb-12 pt-12 pl-12 pr-12" color="red lighten-5">
           <div
             v-for="item in mensajes"
@@ -192,6 +190,7 @@
                 v-model="mensajeescrito"
                 label="Enviar Mensaje"
                 id="textomensaje"
+                @keyup.enter="mandarMensaje"
               ></v-text-field>
             </div>
 
@@ -222,7 +221,6 @@
               </v-btn>
             </div>
           </div>
-   
         </v-card>
 
         <v-btn depressed color="primary" @click="volveratras">
@@ -230,11 +228,13 @@
 
           Volver
         </v-btn>
-              <dialogo-usuarios-chat :dialogousuarios.sync="dialogu"></dialogo-usuarios-chat>
+
+        <dialogo-usuarios-chat
+          :dialogousuarios.sync="dialogu"
+        ></dialogo-usuarios-chat>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
-  
 </template>
 
 
@@ -242,20 +242,22 @@
 import axios from "axios";
 import MiDialogo from "./MIDialogo";
 import DialogoMiembros from "./DialogoMiembros";
-import DialogoUsuariosChat from './DialogoUsuariosChat'
+import DialogoUsuariosChat from "./DialogoUsuariosChat";
 import Mensaje from "./Mensaje.vue";
-
 
 export default {
   name: "Mistepper",
-  components: { Mensaje, MiDialogo, DialogoMiembros, DialogoMiembros, DialogoUsuariosChat },
+  components: {
+    Mensaje,
+    MiDialogo,
+    DialogoMiembros,
+    DialogoMiembros,
+    DialogoUsuariosChat,
+  },
 
   mounted() {
     if (this.$props.tipo) {
-
-
-      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2])
-
+      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
     } else {
       axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
@@ -273,23 +275,10 @@ export default {
       this.chatyacreado(this.chatactualizando);
     }, 3000);
 
-
   
 
-    if (this.primeravez){
-    window.onscroll = function (event) {
-      this.primeravez = false;
-    };
-    }
-
-
-
-
     this.$bus.$on("actualizarstepper", () => {
-
       this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
-
-
     });
   },
 
@@ -307,39 +296,28 @@ export default {
       return "tarjeta" + CODIGO;
     },
 
-    
+    abrirdialogousuarioschat: function () {
+      axios
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb",
+          {}
+        )
+        .then((response) => {
+          this.usuarioschat = response.data.MIEMBROS;
 
-    abrirdialogousuarioschat: function(){
+          var miusuarioo = {
+            TELEFONO: this.$route.params.id.split("&&")[0],
+            NOMBRE: this.$route.params.id.split("&&")[1],
+            ID: this.$route.params.id.split("&&")[2],
+            TOKEN: this.$route.params.id.split("&&")[3],
+          };
 
-            axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb", {})
-      .then((response)=> {
-
-                     
-        this.usuarioschat=response.data.MIEMBROS;
-
-        var miusuarioo= {
-          TELEFONO : this.$route.params.id.split("&&")[0],
-          NOMBRE: this.$route.params.id.split("&&")[1],
-          ID: this.$route.params.id.split("&&")[2],
-          TOKEN: this.$route.params.id.split("&&")[3],
-        }
-
-       
-
-        this.dialogu = true;
-        this.$bus.$emit("dialousuarioschat", this.usuarioschat, miusuarioo);
-
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-
-
-
-
+          this.dialogu = true;
+          this.$bus.$emit("dialousuarioschat", this.usuarioschat, miusuarioo);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
 
     cargarAmigosStepper: function (elidusuario) {
@@ -391,17 +369,17 @@ export default {
     volveratras: function () {
       this.ponercomoleidos(this.chatactualizando);
       var buscarelt = "tarjeta" + this.chatseleccionado.ID;
-      this.primeravez = true;
+ 
       document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
 
       this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
 
       this.chatseleccionado = null;
+      this.mensajes = [];
       clearInterval(this.myVar);
-      console.log("intervalo limpio " + this.myVar);
 
       this.e1 = 1;
-      this.hacerscroll = true;
+ 
       window.scrollTo({
         top: 0,
         left: 0,
@@ -454,6 +432,9 @@ export default {
       }
 
       this.chatseleccionado = item;
+      console.log(
+        "este ese el chat seleccionado ahora " + this.chatseleccionado
+      );
     },
 
     construirRuta: function (ruta) {
@@ -484,24 +465,18 @@ export default {
           this.chatyacreado(micodigo);
         }
 
-        if (this.primeravez && this.mensajes>3) {
-
-          
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            left: 0,
-            behavior: "smooth",
-
-          });
+        var miinput = document.getElementById("textomensaje");
 
 
-             }
+        window.setTimeout(function () {
+          miinput.focus();
+        }, 1000);
+
+
       }
     },
 
     crearChat: function () {
-      console.log("hay que crear un chat");
-
       var tzoffset = new Date().getTimezoneOffset();
       var miDate = new Date(Date.now() - tzoffset * 60 * 1000);
 
@@ -530,12 +505,13 @@ export default {
 
     chatyacreado: function (valorchat) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat", {
-          codigo: valorchat,
-        })
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat",
+          {
+            codigo: valorchat,
+          }
+        )
         .then((response) => {
-          console.log(response);
-
           var dataArr = response.data.mensajes.map((item) => {
             return [item.DIA, item];
           }); // creates array of array
@@ -554,7 +530,7 @@ export default {
 
     mandarMensaje: function () {
       this.e1 = 2;
-      this.primeravez=false;
+  
 
       if (this.mensajeescrito.length > 0) {
         var tzoffset = new Date().getTimezoneOffset();
@@ -603,9 +579,7 @@ export default {
           idusuariorecepcion: receptor.TELEFONO,
         })
         .then((response) => {
-          console.log(response.data.mensajes);
-
-    //      this.mandarnotificacion(micodigo, receptor, esgrupoono);
+          //      this.mandarnotificacion(micodigo, receptor, esgrupoono);
         })
         .catch(function (error) {
           console.log(error);
@@ -680,9 +654,7 @@ export default {
       ver: this.$props.tipo,
 
       foto: "",
-      hacerscroll: true,
 
-      primeravez: true,
     };
   },
 };
@@ -693,9 +665,6 @@ export default {
 .mensajecontainer {
   margin-bottom: 20px;
 }
-
-
-
 
 .red {
   background-color: #ffffff;
@@ -720,7 +689,6 @@ export default {
     font-size: 15pt !important;
   }
 }
-
 
 @media only screen and (max-width: 1600px) {
   .v-text-field {

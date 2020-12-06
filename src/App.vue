@@ -18,8 +18,9 @@
 
         </div>
 
+    
 
-      <router-link to="/">
+      <router-link  :to="`${rutahome}`">
         <v-img
           alt="Logo"
           class="shrink mt-1 hidden-sm-and-down"
@@ -29,7 +30,9 @@
           width="200"
         />
         </router-link>
-      </div>
+
+
+                </div>
 
       <v-spacer></v-spacer>
 
@@ -49,11 +52,10 @@
     </v-app-bar>
 
 
-
       <v-navigation-drawer
       v-model="drawer"
       absolute
-       width="20%"
+       width="500"
        :src="require('@/assets/fondorojonegro.jpg')"
       temporary
       
@@ -62,7 +64,7 @@
       <div id="cabeceradrawer">
         <div>
         <v-list-item-avatar>
-          <v-img :src="fotousuario"></v-img>
+          <v-img :src="fotousuario" ref="fotillo"></v-img>
         </v-list-item-avatar>
         </div>
 
@@ -135,10 +137,12 @@ export default {
 
   mounted() {
 
+
     this.$bus.$on("menunavegacion", (data) => {
-  
+        //response.data.TELEFONO,response.data.NOMBRE,response.data.ID,response.data.TOKEN
 
         this.estalogado=false;
+        this.rutahome=`${data.TELEFONO}&&${data.NOMBRE}&&${data.ID}&&${data.TOKEN}`
         this.miusuario=data;
 
 
@@ -191,6 +195,7 @@ export default {
       miusuario: {},
       fotousuario: '',
       dialousuarioschat: false,
+      rutahome: '/',
       dialogoamigo: false,
       dialogofoto: false,
       dialogg: false,

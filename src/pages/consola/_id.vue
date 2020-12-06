@@ -3,7 +3,14 @@
   <div class="cabecera d-flex">
 
 
-    <imagenaqui :laurl="valor"></imagenaqui>
+
+    <div class="image-cropper">
+        <imagenaqui></imagenaqui>
+
+    </div>
+
+
+    
 
     <div>
       <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
@@ -14,7 +21,8 @@
 
 
 
-      <div if="Integer.parseInt(numero)>0"  >
+  
+     
 
      <v-chip
       class="ma-2 animate__animated animate__bounce animate__repeat-3"
@@ -22,6 +30,7 @@
       text-color="white"
       x-large
        @click="miresumen"
+       v-if="calcular"
        
     >
       {{numero}} 
@@ -29,15 +38,6 @@
             mdi-forum
       </v-icon>
     </v-chip>
-
-
-
-
-   
-    </div>
-
-
-
 
 
 
@@ -85,11 +85,15 @@ export default {
       
     };
   },
+  computed: {
+        calcular: function() {
+      return typeof numero=== 'string' && parseInt(this.numero, 10)>0
+    },
 
+
+  },
 
   methods: {
-
-
 
 
 
@@ -144,7 +148,6 @@ resumennoleidos: function(idpropietarioid) {
       })
       .then((response)=> {
 
-        console.log(response);
 
  
         this.$bus.$emit("mismensajesnoleidos", response.data)
@@ -169,22 +172,6 @@ resumennoleidos: function(idpropietarioid) {
   },
 
   mounted :  function() {
-
-
-
-     this.$bus.$on("fotousuario", (data) => {
-
-         this.valor = 'https:/smartchat.smartlabs.es/img2/anonimos/No_image.jpg';
-
-      console.log('valloooor '+this.valor)
-  
-    });
-
-
-
-
-
-
 
 
 
@@ -273,21 +260,18 @@ h1 {
   margin-bottom: 20px;
 }
 
+
+
+
 .image-cropper {
   width: 100px;
   height: 100px;
-  position: relative;
-  overflow: hidden;
+
+
   border-radius: 50%;
-  margin-right: 70px;
+
 }
 
-img.rounded {
-  object-fit: cover;
-  border-radius: 50%;
-  height: 100px;
-  width: 100px;
-}
 
 
 </style>

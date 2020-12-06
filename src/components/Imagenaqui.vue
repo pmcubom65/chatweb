@@ -1,7 +1,16 @@
 <template>
-        <div class="image-cropper">
+        <div class="image-cropper" >
 
-               <img :src="urlimagen" class="rounded">
+
+            <v-img
+  lazy-src="https://picsum.photos/id/11/10/6"
+  max-height="150"
+  max-width="250"
+  :src="urlimagen"
+  class="rounded"
+></v-img>
+
+    
 
     </div>
 
@@ -12,24 +21,27 @@
 
 
 <script>
-
-
 export default {
   name: "Imagenaqui",
 
-props: {
-    laurl: {
-      default: '',
-      required: false
-    }
-  },
-
   data() {
       return {
-        urlimagen: this.$props.laurl
+        urlimagen: ''
       }
   }
+
+
+
 }
-
-
 </script>
+
+<style scoped>
+img.rounded {
+  object-fit: cover;
+  border-radius: 50%;
+  height: 100px;
+  width: 100px;
+
+
+}
+</style>

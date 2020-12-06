@@ -1,11 +1,14 @@
 <template>
 
   <div class="mitext">
+   
 
     <router-view/>
 
   </div>
 </template>
+
+
 
 
 <style>

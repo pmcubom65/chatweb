@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="noleidos" width="900px">
+    <v-dialog v-model="noleidos" width="100vw">
       <v-card>
         <v-app-bar dark color="primary">
           <v-toolbar-title>Resumen Mensajes No Leidos</v-toolbar-title>
@@ -8,21 +8,27 @@
           <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-card-text v-if="nl != null">
-          <v-list
+        <v-card-text v-if="nl != null" class="d-flex flex-row mb-6">
+          <v-list 
             three-line
             v-for="item in nl.mensajesnoleidos"
             v-bind:key="item.id"
+
           >
             <v-list-item>
               <mensaje :mensaje="item"></mensaje>
 
               <div v-if="parseInt(item.AMIGO) === 4">
-                <v-chip class="ma-2" color="red" outlined @click="contactoanadido(item)" :id="botonseleccionadomodal(item.EMAIL)">
-                  <v-icon left> mdi-server-plus </v-icon>
-                  <h3>Añadir a Contactos</h3>
+                <v-chip
+                  class="ma-2"
+                  color="primary"
+                  outlined
+                  pill
+                  @click="contactoanadido(item)"
+                  :id="botonseleccionadomodal(item.EMAIL)"
+                >
+                  <v-icon left> mdi-account-check </v-icon>Añadir
                 </v-chip>
-
               </div>
 
               <div v-if="parseInt(item.AMIGO) > 4">
@@ -39,6 +45,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click.native="close">Cerrar</v-btn>
+          <v-btn color="purple" text>Marcar Como Leidos</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -85,15 +92,10 @@ export default {
     },
 
     close: function () {
-
       this.$emit("update:noleidos", false);
-
-
     },
 
     contactoanadido: function (item) {
-
-
       axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
           emailamigo: item.EMAIL,

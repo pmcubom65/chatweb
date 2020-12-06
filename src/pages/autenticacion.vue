@@ -28,6 +28,7 @@
                 prepend-icon="mdi-key"
                 v-model="password"
                 type="password"
+                @keyup.enter="autenticar"
               ></v-text-field>
             </v-col>
           </v-row>
