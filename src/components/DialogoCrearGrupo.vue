@@ -99,14 +99,7 @@ export default {
  
     });
 
-
-
-    this.$bus.$on("menunavegacion", (parametros) => {
-   
-      this.usuariologado = parametros;
-
-   
-    });
+    this.usuariologado=this.$store.state.usuario;
 
 
 

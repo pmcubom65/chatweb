@@ -6,7 +6,7 @@
   lazy-src="https://picsum.photos/id/11/10/6"
   max-height="150"
   max-width="250"
-  :src="urlimagen"
+  :src="miusuario.RUTA"
   class="rounded"
 ></v-img>
 
@@ -24,11 +24,14 @@
 export default {
   name: "Imagenaqui",
 
-  data() {
-      return {
-        urlimagen: ''
-      }
-  }
+  computed: {
+
+    miusuario(){
+      return this.$store.state.usuario;
+    }
+
+  },
+
 
 
 

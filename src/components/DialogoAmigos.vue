@@ -90,6 +90,12 @@ import axios from "axios";
 export default {
   name: "DialogoAmigos",
 
+  computed: {
+    elusuario() {
+      return this.$store.state.usuario;
+    }
+  },
+
   mounted() {
     this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
       console.log("dialogoamigo " + parametros);
@@ -97,9 +103,7 @@ export default {
       this.contactosamigos = parametros;
     });
 
-    this.$bus.$on("menunavegacion", (parametros) => {
-      this.usuariologadoygrupo = parametros;
-    });
+      this.usuariologadoygrupo = this.elusuario();
 
     this.$bus.$on("dialogoanadirusuarioagrupo", (parametro) => {
       this.ponergrupos = false;

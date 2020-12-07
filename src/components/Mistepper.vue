@@ -282,11 +282,12 @@ export default {
     });
   },
 
-  created() {
-    this.$bus.$on("fotousuario", (data) => {
-      this.foto = data.replace("//", "/");
-      console.log("foto del usuario " + this.foto);
-    });
+  computed : {
+
+    mifoto(){
+      return this.$store.state.usuario.RUTA;
+    }
+
   },
 
   watch: {},
@@ -592,7 +593,7 @@ export default {
         titulo: this.mensajeescrito,
         fotoreceptor: receptor.RUTA,
 
-        fotoemisor: this.foto,
+        fotoemisor: this.mifoto(),
 
         tokenaenviar: receptor.TOKEN,
         tokenemisor: this.$route.params.id.split("&&")[3],

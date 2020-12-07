@@ -64,7 +64,7 @@
       <div id="cabeceradrawer">
         <div>
         <v-list-item-avatar>
-          <v-img :src="fotousuario" ref="fotillo"></v-img>
+          <v-img :src="lafoto"></v-img>
         </v-list-item-avatar>
         </div>
 
@@ -138,17 +138,14 @@ export default {
   mounted() {
 
 
-    this.$bus.$on("menunavegacion", (data) => {
-        //response.data.TELEFONO,response.data.NOMBRE,response.data.ID,response.data.TOKEN
-
         this.estalogado=false;
-        this.rutahome=`${data.TELEFONO}&&${data.NOMBRE}&&${data.ID}&&${data.TOKEN}`
-        this.miusuario=data;
+        this.rutahome=`${this.elusuario.TELEFONO}&&${this.elusuario.NOMBRE}&&${this.elusuario.ID}&&${this.elusuario.TOKEN}`
+        this.miusuario=this.elusuario;
 
 
                     axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
-          telefono: data.TELEFONO,
+          telefono: this.elusuario.TELEFONO,
         })
         .then((response) => {
           this.grupos = response.data.GRUPOS;
@@ -159,13 +156,8 @@ export default {
           console.log(error);
         });
 
-    });
 
 
-    this.$bus.$on("fotousuario", (data) => {
-      this.fotousuario = data.replace("//", "/");
-  
-    });
 
 
       axios
@@ -184,6 +176,16 @@ export default {
 
 
 
+  },
+
+  computed: {
+      lafoto() {
+        return this.$store.state.usuario.RUTA;
+      },
+
+      elusuario(){
+        return this.$store.state.usuario;
+      }
   },
 
 

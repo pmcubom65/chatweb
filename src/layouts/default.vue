@@ -8,6 +8,25 @@
   </div>
 </template>
 
+<script>
+export default {
+  
+  mounted() {
+
+  if (window.localStorage.getItem("currentusersmartchat") != null) {
+    let elusuario=JSON.parse(window.localStorage.currentusersmartchat)
+    this.$store.dispatch("getUsuario", elusuario);
+
+
+
+  
+  }
+
+
+}
+}
+</script>
+
 
 
 

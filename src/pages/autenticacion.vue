@@ -70,10 +70,13 @@
 <script>
 import axios from "axios";
 import Router from "../router";
+import { mapState } from 'vuex'
 
 
 export default {
   name: "autenticacion",
+
+ 
 
   data() {
     return {
@@ -105,7 +108,7 @@ export default {
             var idusuario = response.data.ID;
             var telefonousuario = response.data.TELEFONO;
             var tokenusuario = response.data.TOKEN;
-            var rutau=response.data.RUTA;
+            var rutau= response.data.RUTA!='' ? response.data.RUTA : "https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
 
             var miusuario = {
               ID: idusuario,
@@ -115,24 +118,12 @@ export default {
               RUTA: rutau
             };
 
-             if (response.data.RUTA.length>0){
-                   this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
-              }else {
-                this.valor="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
-              }
+            this.$store.dispatch("getUsuario", miusuario);
+            window.localStorage.currentusersmartchat=JSON.stringify(miusuario);
 
-         
-
-             this.$bus.$emit('fotousuario', this.valor)
-
-          
-
-            console.log("mi usuario es " + miusuario);
-            this.$bus.$emit("menunavegacion", miusuario);
+ 
             this.cargarAmigos(idusuario, response.data.TELEFONO,response.data.NOMBRE,response.data.ID,response.data.TOKEN)
 
-
-    
 
 
           }
