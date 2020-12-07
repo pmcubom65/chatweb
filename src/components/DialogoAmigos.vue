@@ -103,7 +103,7 @@ export default {
       this.contactosamigos = parametros;
     });
 
-      this.usuariologadoygrupo = this.elusuario();
+      this.usuariologadoygrupo = this.$store.state.usuario;
 
     this.$bus.$on("dialogoanadirusuarioagrupo", (parametro) => {
       this.ponergrupos = false;

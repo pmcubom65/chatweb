@@ -36,19 +36,36 @@
 
       <v-spacer></v-spacer>
 
+
+     <div  v-if="!logado">
       <v-btn
          @click="miscroll"
       ><span class="mr-2">Código qr</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
 
+
+
+ 
       <v-btn
         to="/autenticacion"
         text
       >
         <span class="mr-2">Iniciar Autenticación</span>
         <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      </v-btn>  
+      </div>
+
+
+      <div v-else>
+
+        <combo></combo>
+
+
+      </div>
+
+
+
     </v-app-bar>
 
 
@@ -64,12 +81,12 @@
       <div id="cabeceradrawer">
         <div>
         <v-list-item-avatar>
-          <v-img :src="lafoto"></v-img>
+          <v-img :src="elusuario.RUTA"></v-img>
         </v-list-item-avatar>
         </div>
 
         <div id="bajar">
-          <div class="white--text">{{miusuario.NOMBRE}}</div>
+          <div class="white--text">{{elusuario.NOMBRE}}</div>
         </div>
       </div>
 
@@ -128,24 +145,35 @@ import MiDialogo from './components/MIDialogo';
 import DialogoCrearGrupo from './components/DialogoCrearGrupo'
 import axios from "axios";
 
+import Combo from './components/Combo.vue';
+
 
 export default {
 
   name: 'App',
-  components: { Mifooter, DialogoUsuariosChat, DialogoUsuariosChat, DialogoAmigos, MiDialogo,  DialogoCrearGrupo, DialogoCrearGrupo},
+  components: { Mifooter, DialogoUsuariosChat, DialogoUsuariosChat, DialogoAmigos, MiDialogo,  DialogoCrearGrupo, DialogoCrearGrupo, Combo, Combo},
 
 
   mounted() {
 
 
         this.estalogado=false;
-        this.rutahome=`${this.elusuario.TELEFONO}&&${this.elusuario.NOMBRE}&&${this.elusuario.ID}&&${this.elusuario.TOKEN}`
-        this.miusuario=this.elusuario;
+         this.miusuario=this.$store.state.usuario;
+        if (this.miusuario!=null){
+          this.logado=true;
 
 
+          this.$store.dispatch("getAmigos", this.miusuario.ID);
+        }
+
+
+        this.rutahome=`${this.miusuario.TELEFONO}&&${this.miusuario.NOMBRE}&&${this.miusuario.ID}&&${this.miusuario.TOKEN}`
+       
+
+      
                     axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
-          telefono: this.elusuario.TELEFONO,
+          telefono: this.miusuario.TELEFONO,
         })
         .then((response) => {
           this.grupos = response.data.GRUPOS;
@@ -203,6 +231,7 @@ export default {
       dialogg: false,
       usuarioschat: [],
       grupos: [],
+      logado: false,
       dialogu: false,
         items: [
           { title: 'Inicio', icon: 'mdi-view-dashboard', action: "inicio" },
