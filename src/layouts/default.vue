@@ -17,7 +17,10 @@ export default {
     let elusuario=JSON.parse(window.localStorage.currentusersmartchat)
     this.$store.dispatch("getUsuario", elusuario);
 
+    this.$store.dispatch("getAmigos", elusuario.ID);
 
+
+    this.$bus.$emit("hayusuariograbado");
 
   
   }

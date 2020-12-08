@@ -28,13 +28,23 @@
 
             <v-container
               v-else
-              v-for="item in chats"
-              v-bind:key="item.id"
-              class="grey lighten-5 mb-6"
+    
             >
-              <v-row no-gutters>
+            
+              <v-row>
+
+                  <v-col
+                            v-for="item in chats"
+              v-bind:key="item.id"
+              class="red lighten-5 mb-6"
+              xl="3" md="12"
+              >
+
+
+
                 <v-card
-                  max-width="344"
+                  min-width="344"
+                  min-height="250"
                   outlined
                   class="pa-2 lastarjetaschats"
                   :id="tarjetaid(item.ID)"
@@ -83,6 +93,7 @@
                     >
                   </v-card-actions>
                 </v-card>
+                  </v-col>
               </v-row>
             </v-container>
           </v-layout>

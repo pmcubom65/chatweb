@@ -12,7 +12,7 @@
 
     
 
-    <div>
+    <div class="margen">
       <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
 
       <h3 class="font-italic">Email: {{telefono}}</h3>
@@ -272,6 +272,8 @@ h1 {
 
 }
 
-
+.margen {
+  margin-left: 2.5rem;
+}
 
 </style>

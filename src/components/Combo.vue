@@ -3,7 +3,7 @@
        <v-select
           :items="items"
           v-model="milogout"
-          :label="usuariologado.NOMBRE"
+          :label="dameusuario.NOMBRE"
           filled
           background-color="#545454"
            @change="logout"
@@ -14,8 +14,12 @@
 <script>
 export default {
     name: 'combo',
-    mounted() {
-        this.usuariologado = this.$store.state.usuario;
+    computed : {
+
+        dameusuario() {
+                return this.$store.state.usuario;
+        }
+      
     },
     data() {
         return {

@@ -159,7 +159,7 @@ export default {
 
 
 
-        this.$bus.$emit("dialogoamigo", response.data.MIEMBROS, este);    
+      
         
         
 

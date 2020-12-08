@@ -3,7 +3,7 @@
 
 
             <v-img
-  lazy-src="https://picsum.photos/id/11/10/6"
+  
   max-height="150"
   max-width="250"
   :src="miusuario.RUTA"
@@ -46,5 +46,14 @@ img.rounded {
   width: 100px;
 
 
+}
+
+.image-cropper {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 5rem;
 }
 </style>

@@ -14,7 +14,7 @@
               <v-card
                 width="344"
                 class="mx-auto"
-                v-for="item in contactosamigos"
+                v-for="item in misamigos"
                 v-bind:key="item.id"
               >
                 <v-list-item>
@@ -93,7 +93,12 @@ export default {
   computed: {
     elusuario() {
       return this.$store.state.usuario;
+    },
+
+    misamigos(){
+      return this.$store.state.amigos;
     }
+
   },
 
   mounted() {
