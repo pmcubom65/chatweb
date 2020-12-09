@@ -102,11 +102,13 @@ export default {
   },
 
   mounted() {
-    this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
+  /*  this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
       console.log("dialogoamigo " + parametros);
 
       this.contactosamigos = parametros;
-    });
+    });*/
+
+    this.contactosamigos = this.$store.state.amigos;
 
       this.usuariologadoygrupo = this.$store.state.usuario;
 
@@ -157,13 +159,14 @@ export default {
 
 
      this.ponergrupos = true;
+    // this.$store.dispatch("getGrupos", this.$route.params.id.split("&&")[0]);
     },
 
     anadiragrupo: function (email , nombregrupog) {
 
 
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
+        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: nombregrupog,
         })

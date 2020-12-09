@@ -79,9 +79,7 @@ export default {
  mounted() {
        this.$bus.$on("dialousuarioschat", (parametros, parametros2) => {
       this.usuarios = parametros;
-   
-      this.idprop=parametros2.ID;
-      this.emailprop=parametros2.TELEFONO;
+  
     });
       
   },
@@ -142,9 +140,9 @@ export default {
     },
     contactoanadido: function(item){
             axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
+      .post("http://localhost:54119/api/smartchat/anadiramigo", {
           emailamigo: item,
-           idpropietario: this.idprop
+           idpropietario: this.$store.state.usuario.ID
       })
       .then((response)=> {
         this.usuarioschat=response.data.MIEMBROS;

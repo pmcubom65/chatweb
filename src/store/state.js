@@ -1,5 +1,6 @@
 export default {
     usuario: [],
-    amigos: []
+    amigos: [],
+    grupos: []
 
 }

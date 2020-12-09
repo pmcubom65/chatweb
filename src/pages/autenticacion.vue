@@ -94,7 +94,7 @@ export default {
       this.respuesta = "";
 
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/hacerlogin", {
+        .post("http://localhost:54119/api/smartchat/hacerlogin", {
           password: this.password,
           telefono: this.telefono,
         })
@@ -121,11 +121,20 @@ export default {
             this.$store.dispatch("getUsuario", miusuario);
             window.localStorage.currentusersmartchat=JSON.stringify(miusuario);
 
+            this.$bus.$emit("hayusuariograbado", true);
+
  
-            this.cargarAmigos(idusuario, response.data.TELEFONO,response.data.NOMBRE,response.data.ID,response.data.TOKEN)
+           // this.cargarAmigos(idusuario, response.data.TELEFONO,response.data.NOMBRE,response.data.ID,response.data.TOKEN)
 
 
+           this.$store.dispatch("getAmigos", miusuario.ID);
 
+                     Router.push({
+              path: `consola/${miusuario.TELEFONO}&&${miusuario.NOMBRE}&&${miusuario.ID}&&${miusuario.TOKEN}`,
+
+
+          })
+          
           }
         })
         .catch((error) => {
@@ -137,7 +146,7 @@ export default {
 
     cargarAmigos: function(elidusuario, a,b,c,d) {
             axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
+      .post("http://localhost:54119/api/smartchat/mostraramigos", {
         idpropietario : elidusuario
       })
       .then((response)=> {

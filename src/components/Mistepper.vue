@@ -26,136 +26,127 @@
               >
             </v-container>
 
-            <v-container
-              v-else
-    
-            >
-            
+            <v-container v-else>
               <v-row>
-
-                  <v-col
-                            v-for="item in chats"
-              v-bind:key="item.id"
-              class="red lighten-5 mb-6"
-              xl="3" md="12"
-              >
-
-
-
-                <v-card
-                  min-width="344"
-                  min-height="250"
-                  outlined
-                  class="pa-2 lastarjetaschats"
-                  :id="tarjetaid(item.ID)"
+                <v-col
+                  v-for="item in chats"
+                  v-bind:key="item.id"
+                  class="red lighten-5 mb-6"
+                  xl="3"
+                  md="12"
                 >
-                  <v-list-item three-line>
-                    <v-list-item-content>
-                      <div class="overline mb-4">
-                        Inicio: {{ item.INICIO.replace("T", " ") }}
-                      </div>
-                      <v-list-item-title class="headline mb-1 text-wrap">
-                        {{ item.NOMBRE }}
+                  <v-card
+                    min-width="344"
+                    min-height="250"
+                    outlined
+                    class="pa-2 lastarjetaschats"
+                    :id="tarjetaid(item.ID)"
+                  >
+                    <v-list-item three-line>
+                      <v-list-item-content>
+                        <div class="overline mb-4">
+                          Inicio: {{ item.INICIO.replace("T", " ") }}
+                        </div>
+                        <v-list-item-title class="headline mb-1 text-wrap">
+                          {{ item.NOMBRE }}
 
-                        <v-badge
-                          v-if="item.MENSAJESSINLEER > 0"
-                          color="green"
-                          :content="item.MENSAJESSINLEER"
+                          <v-badge
+                            v-if="item.MENSAJESSINLEER > 0"
+                            color="green"
+                            :content="item.MENSAJESSINLEER"
+                          >
+                          </v-badge>
+                        </v-list-item-title>
+                        <v-list-item-subtitle
+                          >Email {{ item.TELEFONO }}</v-list-item-subtitle
                         >
-                        </v-badge>
-                      </v-list-item-title>
-                      <v-list-item-subtitle
-                        >Email {{ item.TELEFONO }}</v-list-item-subtitle
+                      </v-list-item-content>
+
+                      <img
+                        height="80px"
+                        v-if="item.RUTA.length > 0"
+                        :src="construirRuta(item.RUTA)"
+                      />
+
+                      <img
+                        height="80px"
+                        v-else
+                        src="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg"
+                      />
+                    </v-list-item>
+
+                    <v-card-actions>
+                      <v-btn
+                        outlined
+                        rounded
+                        text
+                        color="primary"
+                        @click="seleccionado(item, chats)"
+                        >SELECCIONAR</v-btn
                       >
-                    </v-list-item-content>
-
-                    <img
-                      height="80px"
-                      v-if="item.RUTA.length > 0"
-                      :src="construirRuta(item.RUTA)"
-                    />
-
-                    <img
-                      height="80px"
-                      v-else
-                      src="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg"
-                    />
-                  </v-list-item>
-
-                  <v-card-actions>
-                    <v-btn
-                      outlined
-                      rounded
-                      text
-                      color="primary"
-                      @click="seleccionado(item, chats)"
-                      >SELECCIONAR</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-                  </v-col>
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
               </v-row>
             </v-container>
           </v-layout>
 
           <v-layout justify-center v-else>
-            <v-container
-              v-for="item in grupos"
-              v-bind:key="item.id"
-              class="grey lighten-5 mb-6"
-            >
-              <v-row no-gutters>
-                <v-card
-                  min-width="344"
-                  outlined
-                  class="pa-2 lastarjetaschats"
-                  :id="tarjetaid(item.ID)"
-                >
-                  <v-list-item three-line>
-                    <v-list-item-content>
-                      <div class="overline mb-4">
-                        <v-badge
-                          v-if="item.MENSAJESSINLEER > 0"
-                          color="green"
-                          :content="item.MENSAJESSINLEER"
-                        >
-                          <v-icon>mdi-account-multiple-outline</v-icon>
-                        </v-badge>
-                      </div>
-                      <v-list-item-title class="headline mb-1">
-                        {{ item.NOMBRE }}
-                      </v-list-item-title>
-                    </v-list-item-content>
+            <v-container class="grey lighten-5 mb-6">
+              <v-row>
+                <v-col v-for="item in grupos" v-bind:key="item.id">
+                  <v-card
+                    min-width="344"
+                    outlined
+                    class="pa-2 lastarjetaschats"
+                    :id="tarjetaid(item.ID)"
+                  >
+                    <v-list-item three-line>
+                      <v-list-item-content>
+                        <div class="overline mb-4">
+                          <v-badge
+                            v-if="item.MENSAJESSINLEER > 0"
+                            color="green"
+                            :content="item.MENSAJESSINLEER"
+                          >
+                            <v-icon>mdi-account-multiple-outline</v-icon>
+                          </v-badge>
+                        </div>
+                        <v-list-item-title class="headline mb-1">
+                          {{ item.NOMBRE }}
+                        </v-list-item-title>
+                      </v-list-item-content>
 
-                    <img
-                      height="80px"
-                      src="https://i.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE"
-                    />
-                  </v-list-item>
+                      <img
+                        height="80px"
+                        src="https://i.picsum.photos/id/160/3200/2119.jpg?hmac=cz68HnnDt3XttIwIFu5ymcvkCp-YbkEBAM-Zgq-4DHE"
+                      />
+                    </v-list-item>
 
-                  <v-card-actions>
-                    <v-btn
-                      outlined
-                      rounded
-                      text
-                      color="primary"
-                      :id="tarjetaid(item.ID)"
-                      @click="seleccionadogrupo(item, grupos)"
-                      >SELECCIONAR</v-btn
-                    >
-                    <dialogo-miembros
-                      :dialog.sync="dialogomiembros"
-                    ></dialogo-miembros>
-                    <v-btn
-                      outlined
-                      rounded
-                      text
-                      color="primary"
-                      @click="abrirdialogomiembros(item.MIEMBROS)"
-                      >MIEMBROS</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
+                    <v-card-actions>
+                      <v-btn
+                        outlined
+                        rounded
+                        text
+                        color="primary"
+                        :id="tarjetaid(item.ID)"
+                        @click="seleccionadogrupo(item, grupos)"
+                        >SELECCIONAR</v-btn
+                      >
+                      <dialogo-miembros
+                        :dialog.sync="dialogomiembros"
+                      ></dialogo-miembros>
+                      <v-btn
+                        outlined
+                        rounded
+                        text
+                        color="primary"
+                        @click="abrirdialogomiembros(item.MIEMBROS)"
+                        >MIEMBROS</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
               </v-row>
             </v-container>
           </v-layout>
@@ -262,16 +253,46 @@ export default {
     Mensaje,
     MiDialogo,
     DialogoMiembros,
-    DialogoMiembros,
     DialogoUsuariosChat,
   },
 
   mounted() {
     if (this.$props.tipo) {
-      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+      //this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+
+      this.chats = this.$store.state.amigos;
     } else {
-      axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
+        this.cogergrupos();
+    }
+
+    this.myVar = setInterval(() => {
+      this.$store.dispatch("getAmigos", this.$route.params.id.split("&&")[2]);
+      this.chats = this.$store.state.amigos;
+      this.chatyacreado(this.chatactualizando);
+      this.cogergrupos();
+      
+    }, 3000);
+
+    this.$bus.$on("actualizarstepper", () => {
+      this.$store.dispatch("getAmigos", this.$route.params.id.split("&&")[2]);
+      this.chats = this.$store.state.amigos;
+      //  this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+    });
+  },
+
+  computed: {
+    mifoto() {
+      return this.$store.state.usuario.RUTA;
+    },
+  },
+
+  watch: {},
+
+  methods: {
+
+    cogergrupos: function() {
+     axios
+        .post("http://localhost:54119/api/smartchat/misgrupos", {
           telefono: this.$route.params.id.split("&&")[0],
         })
         .then((response) => {
@@ -280,40 +301,19 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-    }
+    },
 
-    this.myVar = setInterval(() => {
-      this.chatyacreado(this.chatactualizando);
-    }, 3000);
 
-  
 
-    this.$bus.$on("actualizarstepper", () => {
-      this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
-    });
-  },
 
-  computed : {
 
-    mifoto(){
-      return this.$store.state.usuario.RUTA;
-    }
-
-  },
-
-  watch: {},
-
-  methods: {
     tarjetaid: function (CODIGO) {
       return "tarjeta" + CODIGO;
     },
 
     abrirdialogousuarioschat: function () {
       axios
-        .post(
-          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb",
-          {}
-        )
+        .post("http://localhost:54119/api/smartchat/buscarcontactosweb", {})
         .then((response) => {
           this.usuarioschat = response.data.MIEMBROS;
 
@@ -334,7 +334,7 @@ export default {
 
     cargarAmigosStepper: function (elidusuario) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
+        .post("http://localhost:54119/api/smartchat/mostraramigos", {
           idpropietario: elidusuario,
         })
         .then((response) => {
@@ -368,6 +368,8 @@ export default {
       };
 
       this.$bus.$emit("dialog", parametros);
+
+      this.iniciarChat();
     },
 
     cambiarcolor: function (telefono) {
@@ -381,7 +383,7 @@ export default {
     volveratras: function () {
       this.ponercomoleidos(this.chatactualizando);
       var buscarelt = "tarjeta" + this.chatseleccionado.ID;
- 
+
       document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
 
       this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
@@ -391,7 +393,7 @@ export default {
       clearInterval(this.myVar);
 
       this.e1 = 1;
- 
+
       window.scrollTo({
         top: 0,
         left: 0,
@@ -401,7 +403,7 @@ export default {
 
     ponercomoleidos: function (numerochat) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidos", {
+        .post("http://localhost:54119/api/smartchat/ponercomoleidos", {
           idpropietario: this.$route.params.id.split("&&")[2],
           codigochat: numerochat,
         })
@@ -479,12 +481,9 @@ export default {
 
         var miinput = document.getElementById("textomensaje");
 
-
         window.setTimeout(function () {
           miinput.focus();
         }, 1000);
-
-
       }
     },
 
@@ -501,7 +500,7 @@ export default {
       var codigodelchat = Date.now();
 
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
+        .post("http://localhost:54119/api/smartchat/crearchat", {
           codigo: codigodelchat,
           inicio: m,
         })
@@ -517,12 +516,9 @@ export default {
 
     chatyacreado: function (valorchat) {
       axios
-        .post(
-          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat",
-          {
-            codigo: valorchat,
-          }
-        )
+        .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
+          codigo: valorchat,
+        })
         .then((response) => {
           var dataArr = response.data.mensajes.map((item) => {
             return [item.DIA, item];
@@ -542,7 +538,6 @@ export default {
 
     mandarMensaje: function () {
       this.e1 = 2;
-  
 
       if (this.mensajeescrito.length > 0) {
         var tzoffset = new Date().getTimezoneOffset();
@@ -583,7 +578,7 @@ export default {
 
     enviamensajeaxios: function (micodigo, m, receptor, esgrupoono) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearmensaje", {
+        .post("http://localhost:54119/api/smartchat/crearmensaje", {
           contenido: this.mensajeescrito,
           usuarioid: this.$route.params.id.split("&&")[0],
           chatid: micodigo,
@@ -666,7 +661,6 @@ export default {
       ver: this.$props.tipo,
 
       foto: "",
-
     };
   },
 };

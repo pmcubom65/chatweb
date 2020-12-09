@@ -2,13 +2,13 @@
   <v-app>
     <v-app-bar app color="primary" fixed dark>
       <div class="d-flex align-center">
-        <div v-bind:class="{ midisplay: estalogado }">
+        <div v-bind:class="{ midisplay: !logado }">
           <v-btn icon @click.stop="drawer = !drawer">
             <v-icon>mdi-apps</v-icon>
           </v-btn>
         </div>
 
-        <router-link :to="`${rutahome}`">
+        <router-link to="/">
           <v-img
             alt="Logo"
             class="shrink mt-1 hidden-sm-and-down"
@@ -128,27 +128,30 @@ export default {
 
     this.miusuario = this.$store.state.usuario;
 
-    if (this.miusuario != null) {
+
+
+
+    if (localStorage.getItem("currentusersmartchat") !== null) {
+
+
       this.logado = true;
 
+    }else {
+      this.logado=false;
     }
 
-    this.rutahome = `${this.miusuario.TELEFONO}&&${this.miusuario.NOMBRE}&&${this.miusuario.ID}&&${this.miusuario.TOKEN}`;
 
-    axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
-        telefono: this.miusuario.TELEFONO,
-      })
-      .then((response) => {
-        this.grupos = response.data.GRUPOS;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    this.$bus.$on("hayusuariograbado", (boleano)=>{
+        this.logado=boleano
+    });
+
+    //this.rutahome = `${this.miusuario.TELEFONO}&&${this.miusuario.NOMBRE}&&${this.miusuario.ID}&&${this.miusuario.TOKEN}`;
+
+
 
     axios
       .post(
-        "https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb",
+        "http://localhost:54119/api/smartchat/buscarcontactosweb",
         {}
       )
       .then((response) => {
@@ -255,9 +258,37 @@ export default {
 
         case "anadirusuariogrupo":
           console.log("anadirusuariogrupo");
-          this.dialogoamigo = true;
 
-          this.$bus.$emit("dialogoanadirusuarioagrupo", this.grupos);
+
+            axios
+      .post("http://localhost:54119/api/smartchat/misgrupos", {
+        telefono: this.$store.state.usuario.TELEFONO,
+      })
+      .then((response) => {
+
+        console.log('buscando grupos '+response)
+        this.grupos = response.data.GRUPOS;
+
+         this.dialogoamigo = true;
+
+         this.$bus.$emit("dialogoanadirusuarioagrupo",  response.data.GRUPOS);
+
+
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+
+
+
+
+
+
+
 
           break;
       }

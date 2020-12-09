@@ -100,7 +100,7 @@ methods : {
     registro() {
         console.log('autentico');
 
-        axios.post('https://sdi2.smartlabs.es:30002/api/smartchat/verusuarioypass', {
+        axios.post('http://localhost:54119/api/smartchat/verusuarioypass', {
             telefono: this.telefono,
             password: this.password
             })

@@ -7,7 +7,17 @@ export const SET_USUARIO=(state, usuario) => {
 
 export const SET_AMIGOS=(state, amigos) => {
 
-    console.log('amigos en el mutations '+amigos)
+   
 
     state.amigos=amigos;
+}
+
+
+
+
+export const SET_GRUPOS=(state, grupo) => {
+
+ 
+
+    state.grupos=grupo;
 }

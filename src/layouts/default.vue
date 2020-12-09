@@ -19,8 +19,10 @@ export default {
 
     this.$store.dispatch("getAmigos", elusuario.ID);
 
+      this.$store.dispatch("getGrupos", this.$route.params.id.split("&&")[0]);
 
-    this.$bus.$emit("hayusuariograbado");
+
+    this.$bus.$emit("hayusuariograbado", true);
 
   
   }

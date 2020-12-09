@@ -16,6 +16,11 @@ export default new Router({
       path: '/',
       component: RouterLayout,
       children: routes
+    },
+
+    {
+      path: '/consola/consola',
+      redirect: '/consola'
     }
 
 

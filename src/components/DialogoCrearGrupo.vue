@@ -93,13 +93,9 @@ export default {
   name: "DialogoCrearGrupo",
 
   mounted() {
-    this.$bus.$on("dialogoamigo", (parametros, parametros2) => {
-   
-      this.amigosagrupo = parametros;
- 
-    });
 
-    this.usuariologado=this.$store.state.usuario;
+
+  this.usuariologado=this.$store.state.usuario;
 
 
 
@@ -138,6 +134,9 @@ export default {
       this.amigosagrupo= [];
       this.tituloventana= "Crear Grupo";
       this.mensajeerror="";
+      this.nombregrupo="";
+
+    //  this.$store.dispatch("getGrupos", this.$route.params.id.split("&&")[0]);
 
 
       this.$emit("update:dialogogrupo", false);
@@ -157,7 +156,7 @@ export default {
 
     creargrupo: function () {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/creargrupo", {
+        .post("http://localhost:54119/api/smartchat/creargrupo", {
           nombre: this.nombregrupo,
         })
         .then((response) => {
@@ -165,6 +164,7 @@ export default {
 
           if (response.data.ID !== null) {
             this.idgrupo = response.data.ID;
+               this.amigosagrupo = this.$store.state.amigos;
 
             this.crearChat(response.data.ID);
 
@@ -175,7 +175,7 @@ export default {
             this.hayerror = true;
             this.muestromiembros = false;
 
-            this.anadiragrupo(this.usuariologado.TELEFONO);
+            this.anadiragrupo(this.$store.state.usuario.TELEFONO);
           }
         })
         .catch((error) => {
@@ -202,7 +202,7 @@ export default {
         .replace("T", " ");
 
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
+        .post("http://localhost:54119/api/smartchat/crearchat", {
           codigo: codigochat,
           inicio: m,
         })
@@ -224,7 +224,7 @@ export default {
 
     anadiragrupo: function (email) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
+        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: this.nombregrupo,
         })

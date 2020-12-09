@@ -18,6 +18,7 @@
             <v-list-item>
               <mensaje :mensaje="item"></mensaje>
 
+
               <div v-if="parseInt(item.AMIGO) === 4">
                 <v-chip
                   class="ma-2"
@@ -45,7 +46,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click.native="close">Cerrar</v-btn>
-          <v-btn color="purple" text>Marcar Como Leidos</v-btn>
+          <v-btn color="purple"  @click.native="marcarcomoleidosusuario" text>Marcar Como Leidos</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -95,9 +96,24 @@ export default {
       this.$emit("update:noleidos", false);
     },
 
+    marcarcomoleidosusuario: function () {
+      axios
+        .post("http://localhost:54119/api/smartchat/ponercomoleidosusuario", {
+          idpropietario: this.$route.params.id.split("&&")[2]
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+        this.$emit("update:noleidos", false);
+    },
+
     contactoanadido: function (item) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
+        .post("http://localhost:54119/api/smartchat/anadiramigo", {
           emailamigo: item.EMAIL,
           idpropietario: this.$props.idpropietario,
         })
