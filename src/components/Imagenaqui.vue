@@ -44,8 +44,17 @@ img.rounded {
   border-radius: 50%;
   height: 100px;
   width: 100px;
+ 
+
+}
+
+.v-image {
+  height: 100px !important;
+}
 
 
+.v-responsive__content, .v-image__image {
+  height: 100px !important;
 }
 
 .image-cropper {

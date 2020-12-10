@@ -21,9 +21,13 @@
         <v-card class="mb-12" color="red lighten-5">
           <v-layout justify-center v-if="chatogrupo">
             <v-container v-if="chats.length == 0 && ver">
-              <v-btn color="info" large @click="abrirdialogousuarioschat">
+              <v-btn color="info" large @click="abrirdialogousuarioschat" id="botontransition">
                 <v-icon dark>mdi-comment-account</v-icon>Añadir Contactos</v-btn
               >
+              <v-progress-circular id="espiral"
+                indeterminate
+                color="green"
+              ></v-progress-circular>
             </v-container>
 
             <v-container v-else>
@@ -257,12 +261,14 @@ export default {
   },
 
   mounted() {
+
+
     if (this.$props.tipo) {
       //this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
 
       this.chats = this.$store.state.amigos;
     } else {
-        this.cogergrupos();
+      this.cogergrupos();
     }
 
     this.myVar = setInterval(() => {
@@ -270,7 +276,6 @@ export default {
       this.chats = this.$store.state.amigos;
       this.chatyacreado(this.chatactualizando);
       this.cogergrupos();
-      
     }, 3000);
 
     this.$bus.$on("actualizarstepper", () => {
@@ -289,10 +294,9 @@ export default {
   watch: {},
 
   methods: {
-
-    cogergrupos: function() {
-     axios
-        .post("http://localhost:54119/api/smartchat/misgrupos", {
+    cogergrupos: function () {
+      axios
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
           telefono: this.$route.params.id.split("&&")[0],
         })
         .then((response) => {
@@ -303,17 +307,16 @@ export default {
         });
     },
 
-
-
-
-
     tarjetaid: function (CODIGO) {
       return "tarjeta" + CODIGO;
     },
 
     abrirdialogousuarioschat: function () {
       axios
-        .post("http://localhost:54119/api/smartchat/buscarcontactosweb", {})
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb",
+          {}
+        )
         .then((response) => {
           this.usuarioschat = response.data.MIEMBROS;
 
@@ -334,7 +337,7 @@ export default {
 
     cargarAmigosStepper: function (elidusuario) {
       axios
-        .post("http://localhost:54119/api/smartchat/mostraramigos", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
           idpropietario: elidusuario,
         })
         .then((response) => {
@@ -403,7 +406,7 @@ export default {
 
     ponercomoleidos: function (numerochat) {
       axios
-        .post("http://localhost:54119/api/smartchat/ponercomoleidos", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidos", {
           idpropietario: this.$route.params.id.split("&&")[2],
           codigochat: numerochat,
         })
@@ -500,7 +503,7 @@ export default {
       var codigodelchat = Date.now();
 
       axios
-        .post("http://localhost:54119/api/smartchat/crearchat", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
           codigo: codigodelchat,
           inicio: m,
         })
@@ -516,9 +519,12 @@ export default {
 
     chatyacreado: function (valorchat) {
       axios
-        .post("http://localhost:54119/api/smartchat/buscarmensajeschat", {
-          codigo: valorchat,
-        })
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat",
+          {
+            codigo: valorchat,
+          }
+        )
         .then((response) => {
           var dataArr = response.data.mensajes.map((item) => {
             return [item.DIA, item];
@@ -578,7 +584,7 @@ export default {
 
     enviamensajeaxios: function (micodigo, m, receptor, esgrupoono) {
       axios
-        .post("http://localhost:54119/api/smartchat/crearmensaje", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearmensaje", {
           contenido: this.mensajeescrito,
           usuarioid: this.$route.params.id.split("&&")[0],
           chatid: micodigo,
@@ -702,4 +708,31 @@ export default {
     font-size: 15pt !important;
   }
 }
+
+
+
+#espiral {
+   animation: ani 0s 5s forwards;
+ 
+}
+
+
+#botontransition {
+  animation:  cssAnimation 0s ease-in 5s forwards;
+  opacity: 0;
+ 
+}
+
+@keyframes cssAnimation {
+       100%  {opacity:1; }
+}
+
+
+@keyframes ani {
+    89%  {opacity:1;height: 100px;}
+    90%  {opacity:0; height: 0;}
+    100%  {opacity:0; height: 0;}
+
+}
+
 </style>

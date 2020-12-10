@@ -10,7 +10,7 @@ export const getUsuario=({commit}, usuario)=>{
 
 export const getAmigos=({commit}, USUARIO)=>{
     axios
-    .post("http://localhost:54119/api/smartchat/mostraramigos", {
+    .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
       idpropietario : USUARIO
     })
     .then((response)=> {
@@ -29,7 +29,7 @@ export const getAmigos=({commit}, USUARIO)=>{
 
 export const getGrupos=({commit}, USUARIO)=>{
   axios
-  .post("http://localhost:54119/api/smartchat/misgrupos", {
+  .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
     telefono : USUARIO
   })
   .then((response)=> {

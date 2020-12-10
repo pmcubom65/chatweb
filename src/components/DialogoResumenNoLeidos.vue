@@ -98,7 +98,7 @@ export default {
 
     marcarcomoleidosusuario: function () {
       axios
-        .post("http://localhost:54119/api/smartchat/ponercomoleidosusuario", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidosusuario", {
           idpropietario: this.$route.params.id.split("&&")[2]
         })
         .then((response) => {
@@ -113,7 +113,7 @@ export default {
 
     contactoanadido: function (item) {
       axios
-        .post("http://localhost:54119/api/smartchat/anadiramigo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
           emailamigo: item.EMAIL,
           idpropietario: this.$props.idpropietario,
         })

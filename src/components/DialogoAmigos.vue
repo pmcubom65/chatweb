@@ -166,7 +166,7 @@ export default {
 
 
       axios
-        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: nombregrupog,
         })

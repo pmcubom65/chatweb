@@ -94,7 +94,7 @@ export default {
       this.respuesta = "";
 
       axios
-        .post("http://localhost:54119/api/smartchat/hacerlogin", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/hacerlogin", {
           password: this.password,
           telefono: this.telefono,
         })
@@ -108,7 +108,7 @@ export default {
             var idusuario = response.data.ID;
             var telefonousuario = response.data.TELEFONO;
             var tokenusuario = response.data.TOKEN;
-            var rutau= response.data.RUTA!='' ? response.data.RUTA : "https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
+            var rutau= response.data.RUTA!='' ? this.construirRuta(response.data.RUTA) : "https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
 
             var miusuario = {
               ID: idusuario,
@@ -143,10 +143,20 @@ export default {
         });
     },
 
+    construirRuta: function (ruta) {
+      return (
+        "https://smartchat.smartlabs.es/" +
+        ruta
+          .replace(/\\/g, "/")
+          .replace("//", "")
+          .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
+          .replace("//", "/")
+      );
+    },
 
     cargarAmigos: function(elidusuario, a,b,c,d) {
             axios
-      .post("http://localhost:54119/api/smartchat/mostraramigos", {
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/mostraramigos", {
         idpropietario : elidusuario
       })
       .then((response)=> {

@@ -151,7 +151,7 @@ export default {
 
     axios
       .post(
-        "http://localhost:54119/api/smartchat/buscarcontactosweb",
+        "https://sdi2.smartlabs.es:30002/api/smartchat/buscarcontactosweb",
         {}
       )
       .then((response) => {
@@ -261,7 +261,7 @@ export default {
 
 
             axios
-      .post("http://localhost:54119/api/smartchat/misgrupos", {
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
         telefono: this.$store.state.usuario.TELEFONO,
       })
       .then((response) => {

@@ -83,7 +83,7 @@ export default {
 
     crearUsuario: function (valortoken) {
       axios
-        .post("http://localhost:54119/api/smartchat/crearusuarioconemail", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearusuarioconemail", {
           nombre: this.nombre,
           email: this.telefono,
           token: valortoken,
@@ -96,7 +96,7 @@ export default {
 
     resumennoleidos: function (idpropietarioid) {
       axios
-        .post("http://localhost:54119/api/smartchat/noleidosresumen", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/noleidosresumen", {
           idpropietario: this.$store.state.usuario.ID,
         })
         .then((response) => {
@@ -139,7 +139,7 @@ export default {
       });*/
 
     /*    axios
-      .post("http://localhost:54119/api/smartchat/buscarUsuarioConEmail", {
+      .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarUsuarioConEmail", {
         telefono: this.telefono
       })
       .then((response)=> {

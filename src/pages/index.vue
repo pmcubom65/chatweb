@@ -12,9 +12,9 @@
           alt="logo"
           class="shrink mt-1 hidden-sm-and-down"
           contain
-          min-width="550"
+          min-width="450"
           :src="logo"
-          width="550"
+          width="450"
         />
       </div>
 
@@ -115,8 +115,8 @@ img {
   width: 55vw;
   margin: auto;
 
-  padding-top: 100px;
-  padding-right: 230px;
+  padding-top: 0px;
+  padding-right: 330px;
 }
 
 

@@ -167,7 +167,7 @@ export default {
 
     peticionAxios : function(contenidoarchivo, m, usuariorecepcion) {
                   axios
-          .post("http://localhost:54119/api/smartchat/almacenarimagen", {
+          .post("https://sdi2.smartlabs.es:30002/api/smartchat/almacenarimagen", {
             IMAGEN: contenidoarchivo,
             ID: this.$route.params.id.split("&&")[2],
             CHAT_ID: this.chatid,
@@ -182,6 +182,20 @@ export default {
             this.filelist=[];
             
             //    this.mandarnotificacion();
+
+
+          if (this.chatid==''){
+
+          var elusuario=JSON.parse(window.localStorage.currentusersmartchat)
+          elusuario.RUTA=this.construirRuta(response.data.RUTA);
+          window.localStorage.currentusersmartchat=JSON.stringify(elusuario);
+          
+          this.$store.dispatch("getUsuario", elusuario);
+
+
+          }
+
+
 
 
           })
@@ -205,6 +219,20 @@ export default {
       
      
     },
+
+
+    construirRuta: function (ruta) {
+      return (
+        "https://smartchat.smartlabs.es/" +
+        ruta
+          .replace(/\\/g, "/")
+          .replace("//", "")
+          .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
+          .replace("//", "/")
+      );
+    },
+
+
     remove(i) {
       this.filelist.splice(i, 1);
     },

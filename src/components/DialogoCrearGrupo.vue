@@ -156,7 +156,7 @@ export default {
 
     creargrupo: function () {
       axios
-        .post("http://localhost:54119/api/smartchat/creargrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/creargrupo", {
           nombre: this.nombregrupo,
         })
         .then((response) => {
@@ -202,7 +202,7 @@ export default {
         .replace("T", " ");
 
       axios
-        .post("http://localhost:54119/api/smartchat/crearchat", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearchat", {
           codigo: codigochat,
           inicio: m,
         })
@@ -224,7 +224,7 @@ export default {
 
     anadiragrupo: function (email) {
       axios
-        .post("http://localhost:54119/api/smartchat/anadirusuarioagrupo", {
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadirusuarioagrupo", {
           telefono: email,
           grupo: this.nombregrupo,
         })
