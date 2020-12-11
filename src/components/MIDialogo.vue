@@ -105,6 +105,7 @@ export default {
   methods: {
     close: function () {
       this.hayarchivo = false;
+      this.filelist=[];
       this.$emit("update:dialog", false);
     },
 
@@ -126,11 +127,11 @@ export default {
           this.nombredelarchivo = this.filelist[j][0].name;
 
           reader.onload = () => {
-            console.log(reader.result);
-
+       
             this.crearmensajeconarchivo(reader.result);
           };
         }
+        this.hayarchivo = false;
         this.$emit("update:dialog", false);
       }
     },

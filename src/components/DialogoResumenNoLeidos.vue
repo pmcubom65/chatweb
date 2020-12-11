@@ -19,7 +19,7 @@
                 :mensaje="item"
                 :mostrarirchat="item.AMIGO.length != 4"
               ></mensaje>
-  {{item}}
+
               <div v-if="item.AMIGO.length === 4">
                 <v-tooltip top>
                   <template v-slot:activator="{ on, attrs }">
