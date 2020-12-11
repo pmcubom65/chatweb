@@ -9,27 +9,38 @@
         </v-app-bar>
 
         <v-card-text v-if="nl != null" class="d-flex flex-row mb-6">
-          <v-list 
+          <v-list
             three-line
             v-for="item in nl.mensajesnoleidos"
             v-bind:key="item.id"
-
           >
             <v-list-item>
-              <mensaje :mensaje="item"></mensaje>
-
-
-              <div v-if="parseInt(item.AMIGO) === 4">
-                <v-chip
-                  class="ma-2"
-                  color="primary"
-                  outlined
-                  pill
-                  @click="contactoanadido(item)"
-                  :id="botonseleccionadomodal(item.EMAIL)"
-                >
-                  <v-icon left> mdi-account-check </v-icon>Añadir
-                </v-chip>
+              <mensaje
+                :mensaje="item"
+                :mostrarirchat="item.AMIGO.length != 4"
+              ></mensaje>
+  {{item}}
+              <div v-if="item.AMIGO.length === 4">
+                <v-tooltip top>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-chip
+                      class="ma-2"
+                      color="primary"
+                      outlined
+                      pill
+                      @click="contactoanadido(item)"
+                      :id="botonseleccionadomodal(item.EMAIL)"
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon left> mdi-account-check </v-icon>Añadir
+                    </v-chip>
+                  </template>
+                  <span
+                    >Este usuario no pertenece a sus contactos. Añadálo para
+                    conversar con él</span
+                  >
+                </v-tooltip>
               </div>
 
               <div v-if="parseInt(item.AMIGO) > 4">
@@ -46,7 +57,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click.native="close">Cerrar</v-btn>
-          <v-btn color="purple"  @click.native="marcarcomoleidosusuario" text>Marcar Como Leidos</v-btn>
+          <v-btn color="purple" @click.native="marcarcomoleidosusuario" text
+            >Marcar Como Leidos</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -64,6 +77,10 @@ export default {
   mounted() {
     this.$bus.$on("mismensajesnoleidos", (data) => {
       this.nl = data;
+    });
+
+    this.$bus.$on("cierrate", (datoschat, otro) => {
+      this.close();
     });
   },
 
@@ -98,9 +115,12 @@ export default {
 
     marcarcomoleidosusuario: function () {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidosusuario", {
-          idpropietario: this.$route.params.id.split("&&")[2]
-        })
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/ponercomoleidosusuario",
+          {
+            idpropietario: this.$route.params.id.split("&&")[2],
+          }
+        )
         .then((response) => {
           console.log(response);
         })
@@ -108,7 +128,7 @@ export default {
           console.log(error);
         });
 
-        this.$emit("update:noleidos", false);
+      this.$emit("update:noleidos", false);
     },
 
     contactoanadido: function (item) {

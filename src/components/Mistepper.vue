@@ -21,10 +21,16 @@
         <v-card class="mb-12" color="red lighten-5">
           <v-layout justify-center v-if="chatogrupo">
             <v-container v-if="chats.length == 0 && ver">
-              <v-btn color="info" large @click="abrirdialogousuarioschat" id="botontransition">
+              <v-btn
+                color="info"
+                large
+                @click="abrirdialogousuarioschat"
+                id="botontransition"
+              >
                 <v-icon dark>mdi-comment-account</v-icon>Añadir Contactos</v-btn
               >
-              <v-progress-circular id="espiral"
+              <v-progress-circular
+                id="espiral"
                 indeterminate
                 color="green"
               ></v-progress-circular>
@@ -85,6 +91,7 @@
                         rounded
                         text
                         color="primary"
+                        :id="botonseleccionadoid(item.ID)"
                         @click="seleccionado(item, chats)"
                         >SELECCIONAR</v-btn
                       >
@@ -128,6 +135,7 @@
                     </v-list-item>
 
                     <v-card-actions>
+                          <v-flex>
                       <v-btn
                         outlined
                         rounded
@@ -137,17 +145,17 @@
                         @click="seleccionadogrupo(item, grupos)"
                         >SELECCIONAR</v-btn
                       >
-                      <dialogo-miembros
-                        :dialog.sync="dialogomiembros"
-                      ></dialogo-miembros>
+                         </v-flex>
+                     <v-flex class="text-xs-right">
                       <v-btn
                         outlined
                         rounded
                         text
                         color="primary"
-                        @click="abrirdialogomiembros(item.MIEMBROS)"
+                        @click="abrirdialogomiembros(item.MIEMBROS, item.ID)"
                         >MIEMBROS</v-btn
                       >
+                     </v-flex>
                     </v-card-actions>
                   </v-card>
                 </v-col>
@@ -156,10 +164,16 @@
           </v-layout>
         </v-card>
 
+        <dialogo-miembros
+          :dialog.sync="dialogomiembros"
+          :retain-focus="false"
+        ></dialogo-miembros>
+
         <v-btn
           color="primary"
           :disabled="chatseleccionado == null"
           @click="iniciarChat()"
+          id="botoniniciarchat"
         >
           <v-icon large color="white darken-2">
             mdi-checkbox-marked-circle
@@ -261,8 +275,6 @@ export default {
   },
 
   mounted() {
-
-
     if (this.$props.tipo) {
       //this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
 
@@ -283,6 +295,26 @@ export default {
       this.chats = this.$store.state.amigos;
       //  this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
     });
+
+    this.$bus.$on("cierrate", (datoschat, miid) => {
+      var michats = this.chats.filter((chat) => {
+        return chat.CODIGO == datoschat;
+      });
+      console.log(michats.ID);
+
+      var botontarjetaselecciondado = "botonseleccionadoid" + miid;
+
+      document.getElementById(botontarjetaselecciondado).click();
+    });
+
+
+
+    this.$bus.$on('volvertab', ()=>{
+
+        this.volveratras();
+
+    });
+
   },
 
   computed: {
@@ -309,6 +341,10 @@ export default {
 
     tarjetaid: function (CODIGO) {
       return "tarjeta" + CODIGO;
+    },
+
+    botonseleccionadoid: function (CODIGO) {
+      return "botonseleccionadoid" + CODIGO;
     },
 
     abrirdialogousuarioschat: function () {
@@ -350,10 +386,10 @@ export default {
         });
     },
 
-    abrirdialogomiembros: function (miembros) {
+    abrirdialogomiembros: function (miembros, idgrupo) {
       this.dialogomiembros = true;
 
-      this.$bus.$emit("dialogomiembros", miembros);
+      this.$bus.$emit("dialogomiembros", miembros, idgrupo);
     },
 
     abrirdialogo: function () {
@@ -434,6 +470,8 @@ export default {
       }
 
       this.chatseleccionado = item;
+
+      this.iniciarChat();
     },
 
     seleccionado: function (item, lista) {
@@ -449,9 +487,10 @@ export default {
       }
 
       this.chatseleccionado = item;
-      console.log(
-        "este ese el chat seleccionado ahora " + this.chatseleccionado
-      );
+
+      //botoniniciarchat
+      document.getElementById("botoniniciarchat").disabled = false;
+      document.getElementById("botoniniciarchat").click();
     },
 
     construirRuta: function (ruta) {
@@ -709,30 +748,33 @@ export default {
   }
 }
 
-
-
 #espiral {
-   animation: ani 0s 5s forwards;
- 
+  animation: ani 0s 5s forwards;
 }
 
-
 #botontransition {
-  animation:  cssAnimation 0s ease-in 5s forwards;
+  animation: cssAnimation 0s ease-in 5s forwards;
   opacity: 0;
- 
 }
 
 @keyframes cssAnimation {
-       100%  {opacity:1; }
+  100% {
+    opacity: 1;
+  }
 }
-
 
 @keyframes ani {
-    89%  {opacity:1;height: 100px;}
-    90%  {opacity:0; height: 0;}
-    100%  {opacity:0; height: 0;}
-
+  89% {
+    opacity: 1;
+    height: 100px;
+  }
+  90% {
+    opacity: 0;
+    height: 0;
+  }
+  100% {
+    opacity: 0;
+    height: 0;
+  }
 }
-
 </style>

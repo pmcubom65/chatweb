@@ -100,7 +100,7 @@ export default {
           idpropietario: this.$store.state.usuario.ID,
         })
         .then((response) => {
-          console.log("mi response " + response);
+        
 
           this.$bus.$emit("mismensajesnoleidos", response.data);
 

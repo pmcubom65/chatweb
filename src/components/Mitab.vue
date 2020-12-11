@@ -16,12 +16,12 @@
     >
       <v-tabs-slider  color="yellow"></v-tabs-slider>
 
-      <v-tab href="#chats">
+      <v-tab @click="volvermitab"  href="#chats">
         MIS CHATS
         <v-icon x-large>mdi-account</v-icon>
       </v-tab>
 
-      <v-tab href="#grupos">
+      <v-tab @click="volvermitab" href="#grupos">
         MIS GRUPOS
         <v-icon x-large>mdi-account-multiple</v-icon>
       </v-tab>
@@ -80,6 +80,12 @@ export default {
   },
 
   methods : {
+
+    volvermitab: function() {
+
+       this.$bus.$emit('volvertab')
+
+    }
 
   }
 

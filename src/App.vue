@@ -1,14 +1,14 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" fixed dark>
+    <v-app-bar app fixed dark>
       <div class="d-flex align-center">
         <div v-bind:class="{ midisplay: !logado }">
           <v-btn icon @click.stop="drawer = !drawer">
-            <v-icon>mdi-apps</v-icon>
+            <v-icon color="black">mdi-apps</v-icon>
           </v-btn>
         </div>
 
-        <router-link to="/">
+        <router-link :to="rutaconsola">
           <v-img
             alt="Logo"
             class="shrink mt-1 hidden-sm-and-down"
@@ -43,6 +43,7 @@
       v-model="drawer"
       absolute
       width="500"
+      height="250vh"
       :src="require('@/assets/fondorojonegro.jpg')"
       temporary
     >
@@ -120,7 +121,6 @@ export default {
     DialogoCrearGrupo,
     DialogoCrearGrupo,
     Combo,
-    Combo,
   },
 
   mounted() {
@@ -128,26 +128,17 @@ export default {
 
     this.miusuario = this.$store.state.usuario;
 
-
-
-
     if (localStorage.getItem("currentusersmartchat") !== null) {
-
-
       this.logado = true;
-
-    }else {
-      this.logado=false;
+    } else {
+      this.logado = false;
     }
 
-
-    this.$bus.$on("hayusuariograbado", (boleano)=>{
-        this.logado=boleano
+    this.$bus.$on("hayusuariograbado", (boleano) => {
+      this.logado = boleano;
     });
 
     //this.rutahome = `${this.miusuario.TELEFONO}&&${this.miusuario.NOMBRE}&&${this.miusuario.ID}&&${this.miusuario.TOKEN}`;
-
-
 
     axios
       .post(
@@ -169,6 +160,23 @@ export default {
 
     elusuario() {
       return this.$store.state.usuario;
+    },
+
+    rutaconsola() {
+      if (localStorage.getItem("currentusersmartchat") === null) {
+        Router.push({
+          path: "/",
+        });
+
+        return null;
+      } else {
+        var uno = this.$store.state.usuario.TELEFONO;
+        var dos = this.$store.state.usuario.NOMBRE;
+        var tres = this.$store.state.usuario.ID;
+        var cuatro = this.$store.state.usuario.TOKEN;
+
+        return "/consola/" + uno + "&&" + dos + "&&" + tres + "&&" + cuatro;
+      }
     },
   },
 
@@ -220,6 +228,7 @@ export default {
       switch (accion) {
         case "inicio":
           console.log("inicio");
+          window.location.reload(false);
           break;
 
         case "subirfoto":
@@ -259,36 +268,24 @@ export default {
         case "anadirusuariogrupo":
           console.log("anadirusuariogrupo");
 
+          axios
+            .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
+              telefono: this.$store.state.usuario.TELEFONO,
+            })
+            .then((response) => {
+              console.log("buscando grupos " + response);
+              this.grupos = response.data.GRUPOS;
 
-            axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
-        telefono: this.$store.state.usuario.TELEFONO,
-      })
-      .then((response) => {
+              this.dialogoamigo = true;
 
-        console.log('buscando grupos '+response)
-        this.grupos = response.data.GRUPOS;
-
-         this.dialogoamigo = true;
-
-         this.$bus.$emit("dialogoanadirusuarioagrupo",  response.data.GRUPOS);
-
-
-
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-
-
-
-
-
-
-
-
+              this.$bus.$emit(
+                "dialogoanadirusuarioagrupo",
+                response.data.GRUPOS
+              );
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
 
           break;
       }
@@ -343,5 +340,19 @@ export default {
 
 #bajar {
   margin-top: 0.5rem;
+}
+
+.v-list-item,
+#cabeceradrawer {
+  margin-left: 3rem;
+}
+
+header.v-toolbar {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(255, 0, 0, 1) 100%
+  ) !important;
 }
 </style>

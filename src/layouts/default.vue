@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import Router from '../router'
 export default {
   
   mounted() {
@@ -19,7 +20,7 @@ export default {
 
     this.$store.dispatch("getAmigos", elusuario.ID);
 
-      this.$store.dispatch("getGrupos", this.$route.params.id.split("&&")[0]);
+      this.$store.dispatch("getGrupos", elusuario.TELEFONO);
 
 
     this.$bus.$emit("hayusuariograbado", true);

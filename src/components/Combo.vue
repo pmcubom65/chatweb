@@ -1,12 +1,29 @@
 <template>
   <v-select
     :items="items"
+    item-text="nombre"
     v-model="milogout"
     :label="dameusuario.NOMBRE"
     filled
     background-color="#545454"
     @change="logout"
-  ></v-select>
+    return-object
+  >
+  
+  
+      <template v-slot:item="{ item }">
+         <v-icon
+      large
+      color="red darken-2"
+    >
+      {{item.icono}}
+    </v-icon>
+       <span class="font-weight-black ml-3">{{ item.nombre }}</span>
+    </template>
+  
+  
+  
+  </v-select>
 </template>
 
 <script>
@@ -22,14 +39,17 @@ export default {
     return {
       usuariologado: "",
       milogout: null,
-      items: ["Ir a mi consola", "Logout"],
+      items: [{nombre: "Ir a mi consola", icono: 'mdi-domain'},
+      {nombre:  "Logout", icono: 'mdi-exit-to-app'}
+     ],
       select: "",
     };
   },
 
   methods: {
-    logout: function () {
-      if (this.milogout == "Logout") {
+    logout: function (e) {
+      console.log(e)
+      if (this.milogout.nombre == "Logout") {
         this.$store.dispatch("getUsuario", null);
 
         window.localStorage.removeItem("currentusersmartchat");
@@ -48,7 +68,7 @@ export default {
             path: `consola/${this.dameusuario.TELEFONO}&&${this.dameusuario.NOMBRE}&&${this.dameusuario.ID}&&${this.dameusuario.TOKEN}`,
           });
         }
-           this.milogout = '';
+           this.milogout = e.nombre;
       }
 
     

@@ -1,12 +1,31 @@
 <template>
-
   <v-card class="mx-auto" :color="micolor" dark min-width="400">
     <v-card-title>
       <span class="title font-weight-light">{{ dia.replace("T", " ") }}</span>
     </v-card-title>
 
     <v-card-text class="headline font-weight-bold">
-      <div v-html="ponercontenidomensaje"></div>
+      <div id="miflex">
+        <div v-html="ponercontenidomensaje"></div>
+
+        <v-tooltip top>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              id="mover"
+              color="#6F00FF"
+              fab
+              @click="iralchatdesdecuadro"
+              v-if="irchat"
+              v-bind="attrs"
+              v-on="on"
+              dark
+            >
+              <v-icon>mdi-message-text-outline</v-icon>
+            </v-btn>
+          </template>
+          <span>Responder</span>
+        </v-tooltip>
+      </div>
     </v-card-text>
 
     <v-card-actions>
@@ -47,79 +66,96 @@ export default {
 
   props: {
     mensaje: Object,
+    mostrarirchat: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     chat: {
-
       type: Object,
-      required: false
-
-
+      required: false,
     },
     color: {
-      
       type: String,
       required: false,
-      default: '#FF0000'
-  }
+      default: "#FF0000",
+    }
   },
   data() {
     return {
+      irchat: this.$props.mostrarirchat,
       contenido: this.$props.mensaje.CONTENIDO,
       nombre: this.$props.mensaje.NOMBRE,
       dia: this.$props.mensaje.DIA,
       foto: this.$props.mensaje.FOTO,
       archivoruta: this.$props.mensaje.ARCHIVOS,
+      micodigomensaje: this.$props.mensaje.CODIGO,
+      miid: this.$props.mensaje.ID,
 
       micolor: this.$props.color,
-
-
     };
   },
   methods: {
     dameFoto: function () {
       if (this.foto.length > 0) {
+
+        var miregexp=/[^:][/]{2}/g;
+
+        console.log('foto cristina '+"https://smartchat.smartlabs.es/" +
+          this.$props.mensaje.FOTO.replace(/\\/g, "/")
+            .replace("//", "")
+            .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
+            .replace("//", "/").replace('"/','').replace(miregexp, '/'));
+
         return (
           "https://smartchat.smartlabs.es/" +
           this.$props.mensaje.FOTO.replace(/\\/g, "/")
             .replace("//", "")
             .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
-            .replace("//", "/")
+            .replace("//", "/").replace('"/','').replace(miregexp, '/')
         );
       } else {
         return "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light";
       }
     },
+
+    iralchatdesdecuadro: function () {
+      this.$bus.$emit("cierrate", this.micodigomensaje, this.miid);
+    },
   },
 
   computed: {
     ponercontenidomensaje: function () {
-
       if (this.contenido != null) {
-        
-         return `<span> ${this.contenido} </span>`   
-      
+        return `<span> ${this.contenido} </span>`;
       } else {
-
-        var cadenaarchivo= (
+        var cadenaarchivo =
           "https://smartchat.smartlabs.es" +
           this.archivoruta[0].RUTA.replace(/\\/g, "/")
             .replace("//", "")
             .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
-            .replace("//", "/")
+            .replace("//", "/");
+
+        var nombrearchivo = cadenaarchivo.substring(
+          cadenaarchivo.lastIndexOf("/") + 1
         );
 
-        var nombrearchivo=cadenaarchivo.substring(cadenaarchivo.lastIndexOf("/")+1);
-
-        return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`   
-
-
-
+        return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`;
       }
-
-
-
     },
   },
 };
 </script>
+
+
+<style scoped>
+#miflex {
+  display: flex;
+}
+
+#mover {
+  margin-left: 2rem;
+}
+</style>
 
 

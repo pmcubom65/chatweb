@@ -14,7 +14,7 @@
           <v-row justify="center">
             <v-col cols="12" sm="6">
               <v-text-field
-                label="Número de Telefono"
+                label="Nombre de Usuario"
                 prepend-icon="mdi-account-circle"
                 v-model="telefono"
               ></v-text-field>
