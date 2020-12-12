@@ -6,13 +6,13 @@
       </div>
 
       <div class="margen">
-        <h1 class="display-3 font-weight-bold">Bienvenido {{ nombre }}</h1>
+        <h1 class="display-3 font-weight-bold"><span id="smallbv">Bienvenido</span> {{ nombre }}</h1>
 
-        <h3 class="font-italic">Email: {{ telefono }}</h3>
+        <h3 class="font-italic"><span id="smallbv">Email:</span> {{ telefono }}</h3>
       </div>
 
       <v-chip
-        class="ma-2 ml-10 animate__animated animate__bounce animate__repeat-3"
+        class="ma-2 ml-8 animate__animated animate__bounce animate__repeat-3"
         color="primary"
         text-color="white"
         x-large
@@ -199,5 +199,16 @@ h1 {
 
 .margen {
   margin-left: 2.5rem;
+}
+
+
+@media (max-width: 1200px) {
+  #smallbv {
+    display: none;
+  }
+
+  .display-3 {
+    font-size: 35pt !important;
+  }
 }
 </style>
