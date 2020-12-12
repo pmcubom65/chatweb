@@ -4,7 +4,7 @@
       <div class="d-flex align-center">
         <div v-bind:class="{ midisplay: !logado }">
           <v-btn icon @click.stop="drawer = !drawer">
-            <v-icon color="black">mdi-apps</v-icon>
+            <v-icon color="black">mdi-menu</v-icon>
           </v-btn>
         </div>
 
@@ -168,7 +168,7 @@ export default {
           path: "/",
         });
 
-        return null;
+        return '/';
       } else {
         var uno = this.$store.state.usuario.TELEFONO;
         var dos = this.$store.state.usuario.NOMBRE;
@@ -211,7 +211,7 @@ export default {
         },
         {
           title: "Crear Grupo",
-          icon: "mdi-account-multiple-plus",
+          icon: "mdi-account-group",
           action: "creargrupo",
         },
         {
@@ -321,6 +321,10 @@ export default {
   background-color: red;
 }
 
+.v-list-item__content {
+  padding-left: 4rem !important;
+}
+
 #cabeceradrawer {
   height: 15vh;
   display: flex;
@@ -342,9 +346,9 @@ export default {
   margin-top: 0.5rem;
 }
 
-.v-list-item,
+
 #cabeceradrawer {
-  margin-left: 3rem;
+  padding-left: 3rem;
 }
 
 header.v-toolbar {

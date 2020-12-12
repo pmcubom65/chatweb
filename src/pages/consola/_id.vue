@@ -12,7 +12,7 @@
       </div>
 
       <v-chip
-        class="ma-2 animate__animated animate__bounce animate__repeat-3"
+        class="ma-2 ml-10 animate__animated animate__bounce animate__repeat-3"
         color="primary"
         text-color="white"
         x-large

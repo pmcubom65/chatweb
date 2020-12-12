@@ -8,14 +8,13 @@
       <div id="miflex">
         <div v-html="ponercontenidomensaje"></div>
 
-        <v-tooltip top>
+        <v-tooltip top v-if="irchat && mostrariconos">
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               id="mover"
               color="#6F00FF"
               fab
               @click="iralchatdesdecuadro"
-              v-if="irchat"
               v-bind="attrs"
               v-on="on"
               dark
@@ -25,6 +24,36 @@
           </template>
           <span>Responder</span>
         </v-tooltip>
+
+        <v-tooltip top v-else-if="!irchat && mostrariconos">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="ma-2 ml-12"
+              color="purple"
+              fab
+              @click="contactoanadido"
+              :id="botonseleccionadomodal"
+              v-bind="attrs"
+              v-on="on"
+              dark
+            >
+              <v-icon> mdi-account-check </v-icon>
+            </v-btn>
+          </template>
+          <span
+            >Este usuario no pertenece a sus contactos. Añadálo para conversar
+            con él</span
+          >
+        </v-tooltip>
+
+        <div v-if="!irchat && mostrariconos">
+          <h6
+            class="novisible red--text font-weight-bold"
+            :id="exitomodalcontacto"
+          >
+            Añadido a contactos
+          </h6>
+        </div>
       </div>
     </v-card-text>
 
@@ -71,6 +100,12 @@ export default {
       required: false,
       default: false,
     },
+
+     coniconos: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     chat: {
       type: Object,
       required: false,
@@ -79,10 +114,11 @@ export default {
       type: String,
       required: false,
       default: "#FF0000",
-    }
+    },
   },
   data() {
     return {
+      mostrariconos: this.$props.coniconos,
       irchat: this.$props.mostrarirchat,
       contenido: this.$props.mensaje.CONTENIDO,
       nombre: this.$props.mensaje.NOMBRE,
@@ -91,36 +127,83 @@ export default {
       archivoruta: this.$props.mensaje.ARCHIVOS,
       micodigomensaje: this.$props.mensaje.CODIGO,
       miid: this.$props.mensaje.ID,
+      miemail: this.$props.mensaje.EMAIL,
 
       micolor: this.$props.color,
     };
   },
   methods: {
     dameFoto: function () {
-      if (this.foto.length > 0) {
-
-        var miregexp=/[^:][/]{2}/g;
-
-        console.log('foto cristina '+"https://smartchat.smartlabs.es/" +
-          this.$props.mensaje.FOTO.replace(/\\/g, "/")
-            .replace("//", "")
-            .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
-            .replace("//", "/").replace('"/','').replace(miregexp, '/'));
+      if (this.foto.length > 0 && !this.mostrariconos) {
+        var miregexp = /[^:][/]{2}/g;
 
         return (
           "https://smartchat.smartlabs.es/" +
           this.$props.mensaje.FOTO.replace(/\\/g, "/")
             .replace("//", "")
             .replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "")
-            .replace("//", "/").replace('"/','').replace(miregexp, '/')
+            .replace("//", "/")
+            .replace('"/', "")
+            .replace(miregexp, "/")
         );
+      } else if (this.foto.length > 0 && this.mostrariconos) {
+
+        var miregexp = /[\/\/]{2}/g;
+
+        var miruta =
+          "https://smartchat.smartlabs.es" +
+          this.$props.mensaje.FOTO.replace(/\\/g, "/")
+            .replace("//", "")
+            .replace("SRVWEB-01//inetpub//wwwroot//SmartChat", "")
+            .replace("//", "")
+            .replace('"/', "")
+            .replace(miregexp, "/");
+
+        var midigito = miruta.lastIndexOf(".");
+
+        return miruta.substring(0, midigito + 4);
       } else {
         return "https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light";
       }
     },
 
+
+        botonseleccionadomodal: function () {
+      return "exitoseleccionadomodal" + this.miemail;
+    },
+
+    exitomodalcontacto: function (valor) {
+      return "botonseleccionadomodal" + this.miemail;
+    },
+
     iralchatdesdecuadro: function () {
       this.$bus.$emit("cierrate", this.micodigomensaje, this.miid);
+    },
+
+        contactoanadido: function () {
+      axios
+        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
+          emailamigo: this.miemail,
+          idpropietario: this.$store.state.usuario.ID,
+        })
+        .then((response) => {
+          console.log(response);
+
+          this.usuarioschat = response.data.MIEMBROS;
+          var elementoseleccionado = "exitoseleccionadomodal" + this.miemail;
+          var botonseleccionado = "botonseleccionadomodal" + this.miemail;
+
+          document.getElementById(botonseleccionadomodal).style.display =
+            "none";
+          document.getElementById(elementoseleccionado).style.display = "block";
+
+          this.respuestadd = "Contacto añadido con éxito";
+
+          this.$bus.$emit("actualizarstepper");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
 
@@ -140,7 +223,17 @@ export default {
           cadenaarchivo.lastIndexOf("/") + 1
         );
 
-        return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`;
+        var extension=nombrearchivo.substring(nombrearchivo.lastIndexOf('.')+1);
+        console.log(extension);
+
+        if (extension=='png' || extension=='jpg' || extension=='jpeg'){
+            
+        return `<img id="previewenmensaje" src="${cadenaarchivo}"><h4>
+        <a target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a></h4>`;
+        }else {
+          return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`;
+        }
+
       }
     },
   },
@@ -152,6 +245,13 @@ export default {
 #miflex {
   display: flex;
 }
+
+#previewenmensaje {
+  height: 100px;
+  width: auto;
+
+}
+
 
 #mover {
   margin-left: 2rem;

@@ -17,40 +17,10 @@
             <v-list-item>
               <mensaje
                 :mensaje="item"
-                :mostrarirchat="item.AMIGO.length != 4"
+                :mostrarirchat="item.AMIGO.length != 4" :coniconos="true"
               ></mensaje>
 
-              <div v-if="item.AMIGO.length === 4">
-                <v-tooltip top>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-chip
-                      class="ma-2"
-                      color="primary"
-                      outlined
-                      pill
-                      @click="contactoanadido(item)"
-                      :id="botonseleccionadomodal(item.EMAIL)"
-                      v-bind="attrs"
-                      v-on="on"
-                    >
-                      <v-icon left> mdi-account-check </v-icon>Añadir
-                    </v-chip>
-                  </template>
-                  <span
-                    >Este usuario no pertenece a sus contactos. Añadálo para
-                    conversar con él</span
-                  >
-                </v-tooltip>
-              </div>
-
-              <div v-if="parseInt(item.AMIGO) > 4">
-                <h6
-                  class="novisible red--text font-weight-bold"
-                  :id="exitomodalcontacto(item.EMAIL)"
-                >
-                  Añadido a contactos
-                </h6>
-              </div>
+ 
             </v-list-item>
           </v-list>
         </v-card-text>
@@ -101,13 +71,7 @@ export default {
     };
   },
   methods: {
-    botonseleccionadomodal: function (valor) {
-      return "exitoseleccionadomodal" + valor;
-    },
 
-    exitomodalcontacto: function (valor) {
-      return "botonseleccionadomodal" + valor;
-    },
 
     close: function () {
       this.$emit("update:noleidos", false);
@@ -131,31 +95,7 @@ export default {
       this.$emit("update:noleidos", false);
     },
 
-    contactoanadido: function (item) {
-      axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
-          emailamigo: item.EMAIL,
-          idpropietario: this.$props.idpropietario,
-        })
-        .then((response) => {
-          console.log(response);
 
-          this.usuarioschat = response.data.MIEMBROS;
-          var elementoseleccionado = "exitoseleccionadomodal" + item.EMAIL;
-          var botonseleccionado = "botonseleccionadomodal" + item.EMAIL;
-
-          document.getElementById(botonseleccionadomodal).style.display =
-            "none";
-          document.getElementById(elementoseleccionado).style.display = "block";
-
-          this.respuestadd = "Contacto añadido con éxito";
-
-          this.$bus.$emit("actualizarstepper");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
   },
 };
 </script>

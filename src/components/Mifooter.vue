@@ -64,7 +64,6 @@
 <style scoped>
 #mifoooter {
 
-    background-image: linear-gradient(to bottom right, #B22222,#FA8072) !important;
     color: black;
     margin-top: auto;
     margin-bottom: 0em;
@@ -81,7 +80,7 @@
 
 
 header.v-toolbar {
-  background: linear-gradient(90deg, rgba(255,2,2,1) 0%, rgba(250,29,29,1) 71%, rgba(255,255,255,1) 100%) !important;
+  background: linear-gradient(90deg, rgba(249,1,1,1) 0%, rgba(255,64,64,1) 35%, rgba(255,255,255,1) 100%) !important;
 }
 
 .container {

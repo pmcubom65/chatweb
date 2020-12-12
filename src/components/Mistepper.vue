@@ -104,10 +104,13 @@
 
           <v-layout justify-center v-else>
             <v-container class="grey lighten-5 mb-6">
-              <v-row>
-                <v-col v-for="item in grupos" v-bind:key="item.id">
+              <v-row justify="center">
+                <v-col v-for="item in grupos" v-bind:key="item.id"    xl="4"
+                  md="12">
                   <v-card
                     min-width="344"
+                    
+                    
                     outlined
                     class="pa-2 lastarjetaschats"
                     :id="tarjetaid(item.ID)"
@@ -135,7 +138,7 @@
                     </v-list-item>
 
                     <v-card-actions>
-                          <v-flex>
+                          <v-flex  class="text-md-left">
                       <v-btn
                         outlined
                         rounded
@@ -146,7 +149,7 @@
                         >SELECCIONAR</v-btn
                       >
                          </v-flex>
-                     <v-flex class="text-xs-right">
+                     <v-flex class="text-md-right">
                       <v-btn
                         outlined
                         rounded
