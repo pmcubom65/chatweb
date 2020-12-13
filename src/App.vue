@@ -11,11 +11,12 @@
         <router-link :to="rutaconsola">
           <v-img
             alt="Logo"
-            class="shrink mt-1 hidden-sm-and-down"
+            class="shrink mt-1"
             contain
             min-width="200"
             :src="logo"
             width="200"
+        
           />
         </router-link>
       </div>
@@ -349,6 +350,10 @@ export default {
 
 #cabeceradrawer {
   padding-left: 3rem;
+}
+
+.v-navigation-drawer--close.v-navigation-drawer--temporary {
+    transform: translateX(-13vw) !important;
 }
 
 header.v-toolbar {

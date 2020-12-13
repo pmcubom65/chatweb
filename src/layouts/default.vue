@@ -47,6 +47,17 @@ export default {
 }
 
 
+@media only screen and (max-width: 770px) {
+
+.mitext {
+
+padding-left: 0px !important;
+padding-right: 0px !important;
+}
+
+}
+
+
 .theme--light.v-application {
   background-color: #ffe5ea !important;
 }

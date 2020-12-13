@@ -11,7 +11,9 @@
         <v-card-text>
           <h2 class="display-1 font-weight-black" id="titulocuadro">
             Suba sus archivos en el área
+            
           </h2>
+          <h2 class="red--text">{{alertafotoperfil}}</h2>
 
           <div>
             <div
@@ -117,18 +119,20 @@ export default {
       if (this.filelist.length > 1 && this.chatid.length == 0) {
         this.alertafotoperfil =
           "Solo puede adjuntar un archivo como foto de perfil";
+      } else if (this.filelist.length > 4){
+           this.alertafotoperfil ="Solo puede adjuntar máximo 4 archivos a la vez";
       } else {
-        for (var j = 0; j < this.filelist.length; j++) {
-          var reader = new FileReader();
+        for (let j = 0; j < this.filelist.length; j++) {
+          let reader = new FileReader();
           reader.readAsDataURL(this.filelist[j][0]);
 
-          console.log(this.filelist[j][0].name);
+          console.log('subo '+this.filelist[j][0].name);
 
           this.nombredelarchivo = this.filelist[j][0].name;
 
           reader.onload = () => {
        
-            this.crearmensajeconarchivo(reader.result);
+            this.crearmensajeconarchivo(reader.result, j);
           };
         }
         this.hayarchivo = false;
@@ -136,9 +140,10 @@ export default {
       }
     },
 
-    crearmensajeconarchivo: function (contenidoarchivo) {
+    crearmensajeconarchivo: function (contenidoarchivo, indice) {
       var tzoffset = new Date().getTimezoneOffset();
       var miDate = new Date(Date.now() - tzoffset * 60 * 1000);
+      miDate.setSeconds(miDate.getSeconds() + indice);
 
       var m = miDate
         .toISOString()
@@ -146,7 +151,7 @@ export default {
         .replace(/-/g, "-")
         .replace("T", " ");
 
-      console.log(miDate);
+      console.log('fecha subido '+miDate);
 
       if (!Array.isArray(this.idusuariorecepcion)) {
         this.peticionAxios(contenidoarchivo, m, this.idusuariorecepcion);
@@ -199,7 +204,10 @@ export default {
     },
 
     onChange() {
+      console.log('antes '+this.filelist)
       this.filelist.push(this.$refs.file.files);
+      console.log('despues '+this.filelist)
+
 
       let readeronchange = new FileReader();
       let vm = this;
@@ -285,7 +293,7 @@ ul {
   height: 500px;
 
 
-  margin: 100px auto;
+  margin: 50px auto;
   padding: 20px;
 }
 
@@ -341,10 +349,23 @@ ul {
 
 @media only screen and (max-width: 770px) {
 .v-icon {
-      margin: 0 20%;
+      margin: 0 0px;
   }
+
+  .mdi-cloud-upload {
+  margin: 0 20% !important;
 }
 
+
+.mdi-minus {
+  margin-left: 0px !important;
+}
+}
+
+
+h2 {
+  margin-top: 10px;
+}
 
 
 </style>

@@ -207,18 +207,34 @@
             </div>
           </div>
 
-          <div class="d-flex">
-            <div>
+
+          <v-container>
+  <v-row justify="center">
+    <v-col
+        cols="10"
+          xs="6"
+    
+        
+        
+        >
+          
+
               <v-text-field
                 v-model="mensajeescrito"
                 label="Enviar Mensaje"
                 id="textomensaje"
                 @keyup.enter="mandarMensaje"
               ></v-text-field>
-            </div>
+            
 
-            <div>
-              <v-btn
+
+    </v-col>
+
+    <v-col
+        cols="1">
+        <div class="botonflex">
+          <div>
+                      <v-btn
                 class="mx-2"
                 fab
                 dark
@@ -228,9 +244,10 @@
               >
                 <v-icon dark> mdi-send </v-icon>
               </v-btn>
-            </div>
+          </div>
 
-            <div>
+          <div>
+            
               <mi-dialogo :dialog.sync="dialog"></mi-dialogo>
               <v-btn
                 class="mx-2"
@@ -242,8 +259,15 @@
               >
                 <v-icon dark> mdi-upload </v-icon>
               </v-btn>
-            </div>
+
           </div>
+        </div>
+    </v-col>
+
+  </v-row>
+
+          </v-container>
+       
         </v-card>
 
         <v-btn depressed color="primary" @click="volveratras">
@@ -724,32 +748,33 @@ export default {
   background-color: #ffffff;
 }
 
+.col-1 {
+  padding: 0 !important;
+}
+
+.v-btn--fab {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 .v-text-field {
-  width: 1400px;
+
   font-size: 15pt !important;
 }
 
-.v-btn {
-  margin-right: 20px;
-}
+
 
 .v-badge {
   margin-left: 0.7rem !important;
 }
 
-@media only screen and (max-width: 1000px) {
-  .v-text-field {
-    width: 500px;
-    font-size: 15pt !important;
-  }
+
+.botonflex {
+  display: flex;
+  flex-direction: row;
 }
 
-@media only screen and (max-width: 1600px) {
-  .v-text-field {
-    width: 800px;
-    font-size: 15pt !important;
-  }
-}
+
 
 #espiral {
   animation: ani 0s 5s forwards;
@@ -758,6 +783,29 @@ export default {
 #botontransition {
   animation: cssAnimation 0s ease-in 5s forwards;
   opacity: 0;
+}
+
+@media only screen and (max-width: 770px) {
+.v-card .v-sheet {
+  padding-left: 0px !important;
+}
+
+.container {
+   padding-left: 0px !important;
+}
+
+
+.col-10 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+
+.estestepper {
+    padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
 }
 
 @keyframes cssAnimation {

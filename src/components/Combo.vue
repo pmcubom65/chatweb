@@ -5,7 +5,7 @@
     v-model="milogout"
     :label="dameusuario.NOMBRE"
     filled
-    background-color="#545454"
+    background-color="red"
     @change="logout"
     return-object
   >
@@ -76,3 +76,16 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+@media only screen and (max-width: 770px) {
+
+.v-input {
+  width: 200px !important;
+
+}
+
+
+
+}
+</style>

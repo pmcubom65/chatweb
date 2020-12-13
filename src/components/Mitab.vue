@@ -1,6 +1,6 @@
 <template>
 
-  <v-card  class="fade-in">
+  <v-card  class="fade-in" min-width="600px">
       <v-toolbar
       color="primary"
       height="90"

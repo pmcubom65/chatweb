@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="noleidos" width="100vw">
+    <v-dialog v-model="noleidos" width="100vw"  :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card>
         <v-app-bar dark color="primary">
           <v-toolbar-title>Resumen Mensajes No Leidos</v-toolbar-title>
