@@ -151,7 +151,6 @@ export default {
         .replace(/-/g, "-")
         .replace("T", " ");
 
-      console.log('fecha subido '+miDate);
 
       if (!Array.isArray(this.idusuariorecepcion)) {
         this.peticionAxios(contenidoarchivo, m, this.idusuariorecepcion);
@@ -196,6 +195,12 @@ export default {
             );
 
             this.$store.dispatch("getUsuario", elusuario);
+          } else {
+
+
+            this.mandarnotificacion(usuariorecepcion);
+
+
           }
         })
         .catch(function (error) {
@@ -203,12 +208,60 @@ export default {
         });
     },
 
+
+        mandarnotificacion: function (receptor) {
+
+      var jdata = {
+   
+        titulo: 'Archivo Enviado',
+        fotoemisor: this.$store.state.usuario.RUTA,
+
+        nombreemisor: this.$route.params.id.split("&&")[1],
+        click_action : "https://smartchat.smartlabs.es/",
+
+    //    esgrupo: esgrupoono,
+      };
+
+      axios
+        .post(
+          "https://fcm.googleapis.com/fcm/send",
+          {
+            to: receptor.TOKEN,
+            priority: "high",
+            data: jdata,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization:
+                "key=AAAALyC3imA:APA91bGkws5JZsuIBDS0FCwzNb-Jsd9rtoAD5hdkAXfLZNvPGFAPWcshRfAoBmcoXi7EUxjKfKCeSpYf2i0NCMCzIfoOciLJohPQ-XANf_BriOXlJX0JPF-P1RBkuxs64a-maZG3IJb9",
+            },
+          }
+        )
+        .then((response) => {
+
+   //      this.mensajeescrito = "";
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
+
+  
+    },
+
+
+
+
+
+
+
+
     onChange() {
-      console.log('antes '+this.filelist)
+    
       this.filelist.push(this.$refs.file.files);
-      console.log('despues '+this.filelist)
-
-
+ 
       let readeronchange = new FileReader();
       let vm = this;
       var miimagena='archivo'+this.$refs.file.files[0].name;
@@ -235,28 +288,25 @@ export default {
       this.filelist.splice(i, 1);
     },
     dragover(event) {
+
       event.preventDefault();
-      // Add some visual fluff to show the user can drop its files
-      if (!event.currentTarget.classList.contains("bg-green-300")) {
-        event.currentTarget.classList.remove("bg-gray-100");
-        event.currentTarget.classList.add("bg-green-300");
-      }
+
+      document.getElementById('drop-area').style.borderColor = "green";
+
     },
     dragleave(event) {
-      // Clean up
-      event.currentTarget.classList.add("bg-gray-100");
-      event.currentTarget.classList.remove("bg-green-300");
+        event.preventDefault();
+
+      document.getElementById('drop-area').style.borderColor = "red";
     },
     drop(event) {
       event.preventDefault();
+      document.getElementById('drop-area').style.borderColor = "red";
       this.noarchivos = false;
       this.hayarchivo = true;
       this.$refs.file.files = event.dataTransfer.files;
       this.onChange(); // Trigger the onChange event manually
-      // Clean up
 
-      event.currentTarget.classList.add("bg-gray-100");
-      event.currentTarget.classList.remove("bg-green-300");
     },
   },
   data() {

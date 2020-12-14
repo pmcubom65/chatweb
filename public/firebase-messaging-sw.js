@@ -14,19 +14,38 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.getToken().then(data=>console.log('serviceworker '+data))
+//messaging.getToken().then(data=>console.log('serviceworker '+data))
 
 messaging.onBackgroundMessage(function(payload) {
-    console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = 'Notificación del chat';
+
+
+    const notificationTitle = payload.data.nombreemisor;
     const notificationOptions = {
-      body: 'Notificación del chat',
-      icon: 'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light'
+      body: payload.data.titulo,
+      icon: payload.data.fotoemisor
     };
   
     self.registration.showNotification(notificationTitle,
       notificationOptions);
+
+
+/*  const laurl= payload.data.click_action;
+
+  if (Notification.permission === "granted") {
+    var notification = new Notification(notificationTitle,notificationOptions);
+    notification.onclick = function(event) {
+        event.preventDefault(); // prevent the browser from focusing the Notification's tab
+        window.open(laurl , '_blank');
+        notification.close();
+
+  }
+
+
+}*/
+
+
+
+
 
   });
 

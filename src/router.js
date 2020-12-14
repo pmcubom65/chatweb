@@ -21,12 +21,6 @@ export default new Router({
     {
       path: '*',
       redirect : '/'
-    },
-
-
-    {
-      path: '/consola/consola',
-      redirect: '/consola'
     }
 
 

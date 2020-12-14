@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialogoamigos" width="900px">
+    <v-dialog v-model="dialogoamigos" width="900px" :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card>
         <v-app-bar dark color="primary">
           <v-toolbar-title>{{ titular }}</v-toolbar-title>
@@ -247,5 +247,9 @@ label {
 
 img {
   margin-right: 0.3rem;
+}
+
+.v-list-item__content {
+  padding-left: 20px !important;
 }
 </style>

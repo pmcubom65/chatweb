@@ -1,6 +1,6 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="dialogousuarios" width="700px">
+    <v-dialog v-model="dialogousuarios" width="700px"  :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card>
         <v-app-bar dark color="primary">
           <v-toolbar-title

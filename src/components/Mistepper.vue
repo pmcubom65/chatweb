@@ -105,12 +105,14 @@
           <v-layout justify-center v-else>
             <v-container class="grey lighten-5 mb-6">
               <v-row justify="center">
-                <v-col v-for="item in grupos" v-bind:key="item.id"    xl="4"
-                  md="12">
+                <v-col
+                  v-for="item in grupos"
+                  v-bind:key="item.id"
+                  xl="4"
+                  md="12"
+                >
                   <v-card
                     min-width="344"
-                    
-                    
                     outlined
                     class="pa-2 lastarjetaschats"
                     :id="tarjetaid(item.ID)"
@@ -138,27 +140,27 @@
                     </v-list-item>
 
                     <v-card-actions>
-                          <v-flex  class="text-md-left">
-                      <v-btn
-                        outlined
-                        rounded
-                        text
-                        color="primary"
-                        :id="tarjetaid(item.ID)"
-                        @click="seleccionadogrupo(item, grupos)"
-                        >SELECCIONAR</v-btn
-                      >
-                         </v-flex>
-                     <v-flex class="text-md-right">
-                      <v-btn
-                        outlined
-                        rounded
-                        text
-                        color="primary"
-                        @click="abrirdialogomiembros(item.MIEMBROS, item.ID)"
-                        >MIEMBROS</v-btn
-                      >
-                     </v-flex>
+                      <v-flex class="text-md-left">
+                        <v-btn
+                          outlined
+                          rounded
+                          text
+                          color="primary"
+                          :id="tarjetaid(item.ID)"
+                          @click="seleccionadogrupo(item, grupos)"
+                          >SELECCIONAR</v-btn
+                        >
+                      </v-flex>
+                      <v-flex class="text-md-right">
+                        <v-btn
+                          outlined
+                          rounded
+                          text
+                          color="primary"
+                          @click="abrirdialogomiembros(item.MIEMBROS, item.ID)"
+                          >MIEMBROS</v-btn
+                        >
+                      </v-flex>
                     </v-card-actions>
                   </v-card>
                 </v-col>
@@ -207,67 +209,49 @@
             </div>
           </div>
 
-
           <v-container>
-  <v-row justify="center">
-    <v-col
-        cols="10"
-          xs="6"
-    
-        
-        
-        >
-          
+            <v-row justify="center">
+              <v-col cols="10" xs="6">
+                <v-text-field
+                  v-model="mensajeescrito"
+                  label="Enviar Mensaje"
+                  id="textomensaje"
+                  @keyup.enter="mandarMensaje"
+                ></v-text-field>
+              </v-col>
 
-              <v-text-field
-                v-model="mensajeescrito"
-                label="Enviar Mensaje"
-                id="textomensaje"
-                @keyup.enter="mandarMensaje"
-              ></v-text-field>
-            
+              <v-col cols="1">
+                <div class="botonflex">
+                  <div>
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      dark
+                      large
+                      color="red"
+                      @click="mandarMensaje"
+                    >
+                      <v-icon dark> mdi-send </v-icon>
+                    </v-btn>
+                  </div>
 
-
-    </v-col>
-
-    <v-col
-        cols="1">
-        <div class="botonflex">
-          <div>
-                      <v-btn
-                class="mx-2"
-                fab
-                dark
-                large
-                color="red"
-                @click="mandarMensaje"
-              >
-                <v-icon dark> mdi-send </v-icon>
-              </v-btn>
-          </div>
-
-          <div>
-            
-              <mi-dialogo :dialog.sync="dialog"></mi-dialogo>
-              <v-btn
-                class="mx-2"
-                fab
-                dark
-                large
-                color="red"
-                @click="abrirdialogo"
-              >
-                <v-icon dark> mdi-upload </v-icon>
-              </v-btn>
-
-          </div>
-        </div>
-    </v-col>
-
-  </v-row>
-
+                  <div>
+                    <mi-dialogo :dialog.sync="dialog"></mi-dialogo>
+                    <v-btn
+                      class="mx-2"
+                      fab
+                      dark
+                      large
+                      color="red"
+                      @click="abrirdialogo"
+                    >
+                      <v-icon dark> mdi-upload </v-icon>
+                    </v-btn>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
           </v-container>
-       
         </v-card>
 
         <v-btn depressed color="primary" @click="volveratras">
@@ -327,21 +311,17 @@ export default {
       var michats = this.chats.filter((chat) => {
         return chat.CODIGO == datoschat;
       });
-      console.log(michats.ID);
 
       var botontarjetaselecciondado = "botonseleccionadoid" + miid;
 
-      document.getElementById(botontarjetaselecciondado).click();
+      if (document.getElementById(botontarjetaselecciondado) != null) {
+        document.getElementById(botontarjetaselecciondado).click();
+      }
     });
 
-
-
-    this.$bus.$on('volvertab', ()=>{
-
-        this.volveratras();
-
+    this.$bus.$on("volvertab", () => {
+      this.volveratras();
     });
-
   },
 
   computed: {
@@ -448,7 +428,10 @@ export default {
 
     volveratras: function () {
       this.ponercomoleidos(this.chatactualizando);
-      var buscarelt = (this.chatseleccionado!=null) ? "tarjeta" + this.chatseleccionado.ID : '';
+      var buscarelt =
+        this.chatseleccionado != null
+          ? "tarjeta" + this.chatseleccionado.ID
+          : "";
 
       document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
 
@@ -642,7 +625,7 @@ export default {
             );
           }
         }
-        this.mensajeescrito = "";
+
 
         this.iniciarChat();
       }
@@ -658,27 +641,22 @@ export default {
           idusuariorecepcion: receptor.TELEFONO,
         })
         .then((response) => {
-          //      this.mandarnotificacion(micodigo, receptor, esgrupoono);
+                this.mandarnotificacion(receptor, esgrupoono);
         })
         .catch(function (error) {
           console.log(error);
         });
     },
 
-    mandarnotificacion: function (micodigo, receptor, esgrupoono) {
+    mandarnotificacion: function (receptor, esgrupoono) {
+
       var jdata = {
-        michatid: micodigo,
+   
         titulo: this.mensajeescrito,
-        fotoreceptor: receptor.RUTA,
+        fotoemisor: this.$store.state.usuario.RUTA,
 
-        fotoemisor: this.mifoto(),
-
-        tokenaenviar: receptor.TOKEN,
-        tokenemisor: this.$route.params.id.split("&&")[3],
         nombreemisor: this.$route.params.id.split("&&")[1],
-        nombrereceptor: receptor.NOMBRE,
-        telefonoemisor: this.$route.params.id.split("&&")[0],
-        telefonoreceptor: receptor.TELEFONO,
+        click_action : "https://smartchat.smartlabs.es/",
 
         esgrupo: esgrupoono,
       };
@@ -700,11 +678,16 @@ export default {
           }
         )
         .then((response) => {
-          console.log(response);
+
+         this.mensajeescrito = "";
         })
         .catch(function (error) {
           console.log(error);
         });
+
+
+
+  
     },
   },
 
@@ -758,23 +741,17 @@ export default {
 }
 
 .v-text-field {
-
   font-size: 15pt !important;
 }
-
-
 
 .v-badge {
   margin-left: 0.7rem !important;
 }
 
-
 .botonflex {
   display: flex;
   flex-direction: row;
 }
-
-
 
 #espiral {
   animation: ani 0s 5s forwards;
@@ -786,26 +763,23 @@ export default {
 }
 
 @media only screen and (max-width: 770px) {
-.v-card .v-sheet {
-  padding-left: 0px !important;
-}
-
-.container {
-   padding-left: 0px !important;
-}
-
-
-.col-10 {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
-
-.estestepper {
+  .v-card .v-sheet {
     padding-left: 0px !important;
-  padding-right: 0px !important;
-}
+  }
 
+  .container {
+    padding-left: 0px !important;
+  }
+
+  .col-10 {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+
+  .estestepper {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
 }
 
 @keyframes cssAnimation {

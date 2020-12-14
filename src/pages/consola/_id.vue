@@ -6,9 +6,13 @@
       </div>
 
       <div class="margen">
-        <h1 class="display-3 font-weight-bold"><span id="smallbv">Bienvenido</span> {{ nombre }}</h1>
+        <h1 class="display-3 font-weight-bold">
+          <span id="smallbv">Bienvenido</span> {{ nombre }}
+        </h1>
 
-        <h3 class="font-italic"><span id="smallbv">Email:</span> {{ telefono }}</h3>
+        <h3 class="font-italic">
+          <span id="smallbv">Email:</span> {{ telefono }}
+        </h3>
       </div>
 
       <v-chip
@@ -83,14 +87,29 @@ export default {
 
     crearUsuario: function (valortoken) {
       axios
-        .post("https://sdi2.smartlabs.es:30002/api/smartchat/crearusuarioconemail", {
-          nombre: this.nombre,
-          email: this.telefono,
-          token: valortoken,
-        })
+        .post(
+          "https://sdi2.smartlabs.es:30002/api/smartchat/crearusuarioconemail",
+          {
+            nombre: this.nombre,
+            email: this.telefono,
+            token: valortoken,
+          }
+        )
         .then((response) => {
           console.log("usuario grabado");
-          console.log(response);
+          console.log(response.data);
+
+          var miusuario = {
+            ID: response.data.id,
+            NOMBRE: response.data.nombre,
+            TELEFONO: response.data.telefono,
+            TOKEN: response.data.token,
+            RUTA: this.$store.state.usuario.RUTA,
+          };
+
+          this.$store.dispatch("getUsuario", miusuario);
+          window.localStorage.removeItem("currentusersmartchat");
+          window.localStorage.currentusersmartchat = JSON.stringify(miusuario);
         });
     },
 
@@ -100,8 +119,6 @@ export default {
           idpropietario: this.$store.state.usuario.ID,
         })
         .then((response) => {
-        
-
           this.$bus.$emit("mismensajesnoleidos", response.data);
 
           this.numero = response.data.mensajesnoleidos.length;
@@ -129,48 +146,38 @@ export default {
       this.resumennoleidos(this.id);
     }, 1000);
 
-    /*    const messaging= fire.messaging();
-      messaging.requestPermission();
-      const token = messaging.getToken().then((data)=>{
-        setTimeout(()=>{
-          console.log(data);
-      this.crearUsuario(data)
-        },3000);
-      });*/
+    const messaging = fire.messaging();
+    messaging.requestPermission();
+    const token = messaging.getToken().then((data) => {
+      setTimeout(() => {
+     //   console.log(data);
+        this.crearUsuario(data);
+      }, 3000);
+    });
 
-    /*    axios
-      .post("https://sdi2.smartlabs.es:30002/api/smartchat/buscarUsuarioConEmail", {
-        telefono: this.telefono
-      })
-      .then((response)=> {
+    messaging.onMessage((payload) => {
+  //    console.log("Message received. ", payload.data);
 
-        
+      const notificationTitle = payload.data.nombreemisor;
+      const notificationOptions = {
+        body: payload.data.titulo,
+        icon:
+          payload.data.fotoemisor,
+      };
 
-        console.log(response);
+      const laurl= payload.data.click_action;
 
-        if (response.data.codigo==2){
+      if (Notification.permission === "granted") {
+        var notification = new Notification(notificationTitle,notificationOptions);
+        notification.onclick = function(event) {
+            event.preventDefault(); // prevent the browser from focusing the Notification's tab
+            window.open(laurl , '_blank');
+            notification.close();
 
-            
+      }
 
-          this.crearUsuario(this.telefono);
-        }else {
-
-              if (response.data.RUTA.length>0){
-                   this.valor='https://smartchat.smartlabs.es/'+response.data.RUTA.replace(/\\/g, "/").replace('//', '').replace("SRVWEB-01/inetpub/wwwroot/SmartChat", "").replace('//', '/');
-              }else {
-                this.valor="https://smartchat.smartlabs.es/img2/anonimos/No_image.jpg";
-              }
-
-         
-
-             this.$bus.$emit('fotousuario', this.valor)
-        }
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      
-      });*/
+    
+    }});
   },
 };
 </script>
@@ -200,7 +207,6 @@ h1 {
 .margen {
   margin-left: 2.5rem;
 }
-
 
 @media (max-width: 1200px) {
   #smallbv {
