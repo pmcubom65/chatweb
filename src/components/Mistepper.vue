@@ -448,7 +448,7 @@ export default {
 
     volveratras: function () {
       this.ponercomoleidos(this.chatactualizando);
-      var buscarelt = "tarjeta" + this.chatseleccionado.ID;
+      var buscarelt = (this.chatseleccionado!=null) ? "tarjeta" + this.chatseleccionado.ID : '';
 
       document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
 

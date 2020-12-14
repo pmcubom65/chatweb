@@ -32,7 +32,6 @@
               color="purple"
               fab
               @click="contactoanadido"
-              :id="botonseleccionadomodal"
               v-bind="attrs"
               v-on="on"
               dark
@@ -46,14 +45,7 @@
           >
         </v-tooltip>
 
-        <div v-if="!irchat && mostrariconos">
-          <h6
-            class="novisible red--text font-weight-bold"
-            :id="exitomodalcontacto"
-          >
-            Añadido a contactos
-          </h6>
-        </div>
+
       </div>
     </v-card-text>
 
@@ -101,7 +93,7 @@ export default {
       default: false,
     },
 
-     coniconos: {
+    coniconos: {
       type: Boolean,
       required: false,
       default: false,
@@ -147,7 +139,6 @@ export default {
             .replace(miregexp, "/")
         );
       } else if (this.foto.length > 0 && this.mostrariconos) {
-
         var miregexp = /[\/\/]{2}/g;
 
         var miruta =
@@ -168,19 +159,15 @@ export default {
     },
 
 
-        botonseleccionadomodal: function () {
-      return "exitoseleccionadomodal" + this.miemail;
-    },
 
-    exitomodalcontacto: function (valor) {
-      return "botonseleccionadomodal" + this.miemail;
-    },
+
 
     iralchatdesdecuadro: function () {
       this.$bus.$emit("cierrate", this.micodigomensaje, this.miid);
     },
 
-        contactoanadido: function () {
+    contactoanadido: function () {
+
       axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/anadiramigo", {
           emailamigo: this.miemail,
@@ -190,16 +177,12 @@ export default {
           console.log(response);
 
           this.usuarioschat = response.data.MIEMBROS;
-          var elementoseleccionado = "exitoseleccionadomodal" + this.miemail;
-          var botonseleccionado = "botonseleccionadomodal" + this.miemail;
-
-          document.getElementById(botonseleccionadomodal).style.display =
-            "none";
-          document.getElementById(elementoseleccionado).style.display = "block";
-
-          this.respuestadd = "Contacto añadido con éxito";
 
           this.$bus.$emit("actualizarstepper");
+
+
+          this.iralchatdesdecuadro();
+
         })
         .catch(function (error) {
           console.log(error);
@@ -223,17 +206,23 @@ export default {
           cadenaarchivo.lastIndexOf("/") + 1
         );
 
-        var extension=nombrearchivo.substring(nombrearchivo.lastIndexOf('.')+1);
-        console.log(extension);
+        var extension = nombrearchivo.substring(
+          nombrearchivo.lastIndexOf(".") + 1
+        );
 
-        if (extension=='png' || extension=='jpg' || extension=='jpeg'){
-            
-        return `<img id="previewenmensaje" src="${cadenaarchivo}"><h4>
+        if (
+          extension == "png" ||
+          extension == "jpg" ||
+          extension == "jpeg" ||
+          extension == "PNG" ||
+          extension == "JPG" ||
+          extension == "JPEG"
+        ) {
+          return `<img id="previewenmensaje" src="${cadenaarchivo}"><h4>
         <a target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a></h4>`;
-        }else {
+        } else {
           return `<a  target="_blank" href="${cadenaarchivo}"> ${nombrearchivo} </a>`;
         }
-
       }
     },
   },
@@ -249,9 +238,7 @@ export default {
 #previewenmensaje {
   height: 100px;
   width: auto;
-
 }
-
 
 #mover {
   margin-left: 2rem;
