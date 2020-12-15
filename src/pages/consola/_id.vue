@@ -33,7 +33,7 @@
       :idpropietario="id"
     ></dialogo-resumen-no-leidos>
 
-    <div class="panel">
+    <div id="panel">
       <mitab></mitab>
     </div>
   </div>
@@ -150,41 +150,72 @@ export default {
     messaging.requestPermission();
     const token = messaging.getToken().then((data) => {
       setTimeout(() => {
-     //   console.log(data);
+        //   console.log(data);
         this.crearUsuario(data);
       }, 3000);
     });
 
     messaging.onMessage((payload) => {
-  //    console.log("Message received. ", payload.data);
+      //    console.log("Message received. ", payload.data);
 
       const notificationTitle = payload.data.nombreemisor;
       const notificationOptions = {
         body: payload.data.titulo,
-        icon:
-          payload.data.fotoemisor,
+        icon: payload.data.fotoemisor,
       };
 
-      const laurl= payload.data.click_action;
+      const laurl = payload.data.click_action;
 
       if (Notification.permission === "granted") {
-        var notification = new Notification(notificationTitle,notificationOptions);
-        notification.onclick = function(event) {
-            event.preventDefault(); // prevent the browser from focusing the Notification's tab
-            window.open(laurl , '_blank');
-            notification.close();
-
+        var notification = new Notification(
+          notificationTitle,
+          notificationOptions
+        );
+        notification.onclick = function (event) {
+          event.preventDefault(); // prevent the browser from focusing the Notification's tab
+          window.open(laurl, "_blank");
+          notification.close();
+        };
       }
+    });
 
-    
-    }});
+    this.$bus.$on("probaranimacion", () => {
+      var mipanel = document.getElementById("panel");
+
+      console.log("ejecuto animacion " + mipanel);
+      const unaanimacion = "animate__animated";
+      const dosanimacion = "animate__slideInUp";
+      const tresa = "animate__slower";
+   //   const cuatro = "animate__delay-1s";
+      mipanel.classList.add(unaanimacion);
+      mipanel.classList.add(dosanimacion);
+      mipanel.classList.add(tresa);
+ //     mipanel.classList.add(cuatro);
+    });
+
+    this.$bus.$on("quitaranimacion", () => {
+      var mipanel = document.getElementById("panel");
+      console.log("quito animacion " + mipanel);
+
+            const unaanimacion = "animate__animated";
+      const dosanimacion = "animate__slideInUp";
+      const tresa = "animate__slower";
+  //    const cuatro = "animate__delay-1s";
+
+ 
+        mipanel.classList.remove(unaanimacion);
+        mipanel.classList.remove(dosanimacion);
+        mipanel.classList.remove(tresa);
+  //      mipanel.classList.remove(cuatro);
+      
+    });
   },
 };
 </script>
 
 
 <style scoped>
-.panel {
+#panel {
   margin-top: 0px;
 }
 

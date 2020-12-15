@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="box">
+    <div class="box animate__animated animate__slideInLeft">
       <div id="espacio"></div>
       <div
         class="presentacion"

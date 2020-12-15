@@ -9,7 +9,7 @@
         </v-row>
       </v-container>
 
-      <v-form>
+      <v-form class="animate__animated animate__lightSpeedInRight">
         <v-container>
           <v-row justify="center">
             <v-col cols="12" sm="6">

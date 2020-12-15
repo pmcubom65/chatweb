@@ -2,7 +2,7 @@
 
 
 
-  <v-app>
+  <v-app  class="animate__animated animate__fadeIn  animate__delay-1s">
     <v-app-bar
       app
       

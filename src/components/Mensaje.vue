@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" :color="micolor" dark min-width="400">
+  <v-card class="mx-auto" :color="micolor" dark min-width="400" id="mensajecard">
     <v-card-title>
       <span class="title font-weight-light">{{ dia.replace("T", " ") }}</span>
     </v-card-title>
@@ -124,6 +124,8 @@ export default {
       micolor: this.$props.color,
     };
   },
+
+
   methods: {
     dameFoto: function () {
       if (this.foto.length > 0 && !this.mostrariconos) {

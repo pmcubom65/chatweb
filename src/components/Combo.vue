@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-select
     :items="items"
     item-text="nombre"
@@ -22,14 +23,26 @@
     </template>
   
   
-  
+   
   </v-select>
+
+
+ <dialogo-logout :dialogologout.sync="dialogologouta"></dialogo-logout>
+</div>
+
 </template>
 
 <script>
 import Router from "../router";
+
+import DialogoLogout from './DialogoLogout.vue';
+
 export default {
   name: "combo",
+    components: {
+    
+        DialogoLogout
+    },
   computed: {
     dameusuario() {
       return this.$store.state.usuario;
@@ -43,6 +56,7 @@ export default {
       {nombre:  "Logout", icono: 'mdi-exit-to-app'}
      ],
       select: "",
+      dialogologouta: false,
     };
   },
 
@@ -50,13 +64,8 @@ export default {
     logout: function (e) {
       console.log(e)
       if (this.milogout.nombre == "Logout") {
-        this.$store.dispatch("getUsuario", null);
+      this.dialogologouta = true;
 
-        window.localStorage.removeItem("currentusersmartchat");
-        this.$bus.$emit("hayusuariograbado", false);
-        Router.push({
-          path: "/",
-        });
       } else {
         console.log("ir a consola ");
         console.log(Router.currentRoute);
@@ -71,6 +80,16 @@ export default {
            this.milogout = e.nombre;
       }
 
+
+
+
+
+        
+      this.milogout=null;
+
+
+
+   
     
     },
   },

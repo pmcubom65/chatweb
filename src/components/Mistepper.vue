@@ -51,6 +51,7 @@
                     outlined
                     class="pa-2 lastarjetaschats"
                     :id="tarjetaid(item.ID)"
+                  
                   >
                     <v-list-item three-line>
                       <v-list-item-content>
@@ -194,13 +195,13 @@
       </v-stepper-content>
 
       <v-stepper-content step="2" class="estestepper">
-        <v-card class="mb-12 pb-12 pt-12 pl-12 pr-12" color="red lighten-5">
+        <v-card class="mb-12 pb-12 pt-12 pl-12 pr-12" color="red lighten-5"  id="cajitas">
           <div
             v-for="item in mensajes"
             v-bind:key="item.id"
             class="d-flex mensajecontainer"
           >
-            <div id="cajitas">
+            <div>
               <mensaje
                 :mensaje="item"
                 :chat="chatseleccionado"
@@ -427,13 +428,38 @@ export default {
     },
 
     volveratras: function () {
+
+      this.$bus.$emit('probaranimacion')
+
+      var caj = document.getElementById("cajitas");
+
+
+      const unaanimacion = "animate__animated";
+      const dosanimacion = "animate__fadeIn";
+      const tresa = "animate__slow";
+      const cuatro = "animate__delay-1s";
+
+ 
+        caj.classList.remove(unaanimacion);
+        caj.classList.remove(dosanimacion);
+        caj.classList.remove(tresa);
+        caj.classList.remove(cuatro);
+
+
+
+
+
       this.ponercomoleidos(this.chatactualizando);
       var buscarelt =
         this.chatseleccionado != null
           ? "tarjeta" + this.chatseleccionado.ID
           : "";
 
-      document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
+      if (document.getElementById(buscarelt)!=null) {
+            document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
+      }
+
+     
 
       this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
 
@@ -448,6 +474,9 @@ export default {
         left: 0,
         behavior: "smooth",
       });
+
+
+      
     },
 
     ponercomoleidos: function (numerochat) {
@@ -465,6 +494,9 @@ export default {
     },
 
     seleccionadogrupo: function (item, grupos) {
+
+      this.$bus.$emit('quitaranimacion');
+
       var buscagrupo = "tarjeta" + item.ID;
 
       document.getElementById(buscagrupo).style.backgroundColor = "#FA8072";
@@ -485,6 +517,9 @@ export default {
     },
 
     seleccionado: function (item, lista) {
+
+      this.$bus.$emit('quitaranimacion');
+
       var buscarel = "tarjeta" + item.ID;
       document.getElementById(buscarel).style.backgroundColor = "#FA8072";
 
@@ -501,6 +536,22 @@ export default {
       //botoniniciarchat
       document.getElementById("botoniniciarchat").disabled = false;
       document.getElementById("botoniniciarchat").click();
+
+      var caj = document.getElementById("cajitas");
+      console.log("quito animacion cajas" + caj);
+
+      const unaanimacion = "animate__animated";
+      const dosanimacion = "animate__fadeIn";
+      const tresa = "animate__slow";
+      const cuatro = "animate__delay-1s";
+
+ 
+        caj.classList.add(unaanimacion);
+        caj.classList.add(dosanimacion);
+        caj.classList.add(tresa);
+        caj.classList.add(cuatro);
+
+
     },
 
     construirRuta: function (ruta) {
@@ -515,6 +566,8 @@ export default {
     },
 
     iniciarChat: function () {
+
+      console.log('refresco chat....');
       if (this.chatseleccionado != null) {
         this.e1 = 2;
 
@@ -802,4 +855,6 @@ export default {
     height: 0;
   }
 }
+
+
 </style>

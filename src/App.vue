@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app fixed dark>
+    <v-app-bar app fixed dark class="animate__animated animate__fadeIn  animate__delay-1s">
       <div class="d-flex align-center">
         <div v-bind:class="{ midisplay: !logado }">
           <v-btn icon @click.stop="drawer = !drawer">
@@ -355,6 +355,7 @@ export default {
 .v-navigation-drawer--close.v-navigation-drawer--temporary {
     transform: translateX(-13vw) !important;
 }
+
 
 header.v-toolbar {
   background: linear-gradient(

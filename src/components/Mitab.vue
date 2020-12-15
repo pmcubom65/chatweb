@@ -1,6 +1,6 @@
 <template>
 
-  <v-card  class="fade-in" min-width="600px">
+  <v-card  class="animate__animated animate__slideInLeft  animate__delay-1s" min-width="600px">
       <v-toolbar
       color="primary"
       height="90"
