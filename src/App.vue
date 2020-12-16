@@ -94,6 +94,11 @@
 
       <dialogo-amigos :dialogoamigos.sync="dialogoamigo"></dialogo-amigos>
       <mi-dialogo :dialog.sync="dialogofoto"></mi-dialogo>
+      <v-flex xs3 offset-xs9 align-end>
+        <v-btn class="ma-10" fab dark large color="red" @click.stop="drawer = !drawer">
+          <v-icon dark>mdi-close-box</v-icon>
+        </v-btn>
+      </v-flex>
     </v-navigation-drawer>
 
     <v-main>
@@ -229,6 +234,7 @@ export default {
   },
 
   methods: {
+
     menuActionClick: function (accion) {
       switch (accion) {
         case "inicio":

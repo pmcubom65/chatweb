@@ -300,12 +300,16 @@ export default {
       this.chats = this.$store.state.amigos;
       this.chatyacreado(this.chatactualizando);
       this.cogergrupos();
-    }, 3000);
+    }, 5000);
 
     this.$bus.$on("actualizarstepper", () => {
       this.$store.dispatch("getAmigos", this.$route.params.id.split("&&")[2]);
       this.chats = this.$store.state.amigos;
       //  this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
+      
+      if (this.chatactualizando!=null && this.chatactualizando!='') {
+        this.chatyacreado(this.chatactualizando);
+      }
     });
 
     this.$bus.$on("cierrate", (datoschat, miid) => {
@@ -321,7 +325,10 @@ export default {
     });
 
     this.$bus.$on("volvertab", () => {
+      
       this.volveratras();
+
+      
     });
   },
 
@@ -447,8 +454,6 @@ export default {
 
 
 
-
-
       this.ponercomoleidos(this.chatactualizando);
       var buscarelt =
         this.chatseleccionado != null
@@ -512,6 +517,7 @@ export default {
       }
 
       this.chatseleccionado = item;
+      window.scrollTo(0,document.body.scrollHeight, "smooth");
 
       this.iniciarChat();
     },
@@ -586,9 +592,13 @@ export default {
 
         var miinput = document.getElementById("textomensaje");
 
-        window.setTimeout(function () {
+   
+        window.setTimeout(()=> {
+  
           miinput.focus();
         }, 1000);
+
+
       }
     },
 
@@ -620,6 +630,8 @@ export default {
     },
 
     chatyacreado: function (valorchat) {
+      
+      
       axios
         .post(
           "https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat",
@@ -628,16 +640,25 @@ export default {
           }
         )
         .then((response) => {
-          var dataArr = response.data.mensajes.map((item) => {
+
+            var dataArr = response.data.mensajes.map((item) => {
+
             return [item.DIA, item];
           }); // creates array of array
-          var maparr = new Map(dataArr); // create key value pair from array of array
 
+    
+          var maparr = new Map(dataArr); // create key value pair from array of array
+  
           var result = [...maparr.values()]; //converting back to array from mapobject
 
-          //   this.mensajes = response.data.mensajes;
 
-          this.mensajes = result;
+            if (valorchat.length>10){
+                  this.mensajes = response.data.mensajes;
+            }else {
+
+              this.mensajes=result;
+            }
+
         })
         .catch(function (error) {
           console.log(error);
@@ -694,7 +715,12 @@ export default {
           idusuariorecepcion: receptor.TELEFONO,
         })
         .then((response) => {
-                this.mandarnotificacion(receptor, esgrupoono);
+
+              if (receptor.TELEFONO!=this.$store.state.usuario.TELEFONO){
+                    this.mandarnotificacion(receptor, esgrupoono);
+              }
+
+     
         })
         .catch(function (error) {
           console.log(error);

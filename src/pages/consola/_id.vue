@@ -177,6 +177,8 @@ export default {
           notification.close();
         };
       }
+
+      this.$bus.$emit("actualizarstepper");
     });
 
     this.$bus.$on("probaranimacion", () => {

@@ -21,7 +21,7 @@
         <v-icon x-large>mdi-account</v-icon>
       </v-tab>
 
-      <v-tab @click="volvermitab" href="#grupos">
+      <v-tab @click="volvermitab" href="#grupos" >
         MIS GRUPOS
         <v-icon x-large>mdi-account-multiple</v-icon>
       </v-tab>
