@@ -73,7 +73,11 @@ export default {
       Router.push({
         path: "/",
       });
-      window.location.reload(false);
+     // window.location.reload(false);
+
+     setTimeout(function(){
+  window.location.reload();
+});
     },
   },
 };

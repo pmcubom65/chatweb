@@ -4,7 +4,7 @@
       <v-container>
         <v-row justify="center">
           <v-col cols="12" sm="6">
-            <h1 class="Heading 1">AUTENTICACION</h1>
+            <h1 class="Heading 1 animate__animated animate__lightSpeedInRight">AUTENTICACION</h1>
           </v-col>
         </v-row>
       </v-container>

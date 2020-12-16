@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-app-bar app fixed dark class="animate__animated animate__fadeIn  animate__delay-1s">
+    <v-app-bar
+      app
+      fixed
+      dark
+      class="animate__animated animate__fadeIn animate__delay-1s"
+    >
       <div class="d-flex align-center">
         <div v-bind:class="{ midisplay: !logado }">
           <v-btn icon @click.stop="drawer = !drawer">
@@ -16,7 +21,6 @@
             min-width="200"
             :src="logo"
             width="200"
-        
           />
         </router-link>
       </div>
@@ -169,7 +173,7 @@ export default {
           path: "/",
         });
 
-        return '/';
+        return "/";
       } else {
         var uno = this.$store.state.usuario.TELEFONO;
         var dos = this.$store.state.usuario.NOMBRE;
@@ -229,7 +233,14 @@ export default {
       switch (accion) {
         case "inicio":
           console.log("inicio");
-          window.location.reload(false);
+          Router.push({
+            path: "/",
+          });
+
+          setTimeout(function () {
+            window.location.reload();
+          });
+
           break;
 
         case "subirfoto":
@@ -347,15 +358,13 @@ export default {
   margin-top: 0.5rem;
 }
 
-
 #cabeceradrawer {
   padding-left: 3rem;
 }
 
 .v-navigation-drawer--close.v-navigation-drawer--temporary {
-    transform: translateX(-13vw) !important;
+  transform: translateX(-13vw) !important;
 }
-
 
 header.v-toolbar {
   background: linear-gradient(
