@@ -223,6 +223,7 @@
             v-bind:key="item.id"
             class="d-flex mensajecontainer"
           >
+
             <div>
               <mensaje
                 :mensaje="item"
@@ -655,18 +656,28 @@ export default {
         )
         .then((response) => {
 
-           var dataArr = response.data.mensajes.map((item) => {
+      /*     var dataArr = response.data.mensajes.map((item) => {
             return [item.DIA, item];
           }); // creates array of array
 
           var maparr = new Map(dataArr); // create key value pair from array of array
 
-          var result = [...maparr.values()]; //converting back to array from mapobject
+          var result = [...maparr.values()]; //converting back to array from mapobject*/
 
 
           if (valorchat.toString().length < 8) {
-            this.mensajesdialogo = result;
-            this.mensajes = result.slice(result.length - 6, result.length);
+            
+
+
+           this.mensajes= response.data.mensajes.filter((elem, index, self) => self.findIndex(
+                    (t) => {return (t.DIA === elem.DIA )}) === index)
+
+            this.mensajesdialogo = this.mensajes;
+
+
+         //   this.mensajes = result.slice(result.length - 6, result.length);
+       
+
 
           } else {
             this.mensajes = response.data.mensajes;
@@ -732,10 +743,11 @@ export default {
         })
         .then((response) => {
 
-   
+            
           if (receptor.TELEFONO != this.$store.state.usuario.TELEFONO) {
             this.mandarnotificacion(receptor, esgrupoono);
           }
+      
         })
         .catch(function (error) {
           console.log(error);
