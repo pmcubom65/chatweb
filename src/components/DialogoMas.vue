@@ -1,23 +1,24 @@
 <template>
   <v-layout row justify-center>
-    <v-dialog v-model="noleidos" width="100vw"  :fullscreen="$vuetify.breakpoint.xsOnly">
+    <v-dialog v-model="mas" width="100vw"  :fullscreen="$vuetify.breakpoint.xsOnly">
       <v-card>
         <v-app-bar dark color="primary">
-          <v-toolbar-title>Resumen Mensajes No Leidos (para borrarlos pulse marcar como leidos)</v-toolbar-title>
+          <v-toolbar-title>Todos los mensajes</v-toolbar-title>
 
           <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-card-text v-if="nl != null" class="d-flex flex-row mb-6  flex-wrap">
+        <v-card-text class="d-flex flex-row mb-6  flex-wrap">
           <v-list
             three-line
-            v-for="item in nl.mensajesnoleidos"
+            v-for="item in total"
             v-bind:key="item.id"
           >
+    
             <v-list-item>
               <mensaje
                 :mensaje="item"
-                :mostrarirchat="item.AMIGO.length != 4" :coniconos="true"
+                :mostrarirchat="false" :coniconos="false"
               ></mensaje>
 
  
@@ -27,9 +28,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click.native="close">Cerrar</v-btn>
-          <v-btn color="purple" @click.native="marcarcomoleidosusuario" text
-            >Marcar Como Leidos</v-btn
-          >
+       
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -41,40 +40,34 @@
 import axios from "axios";
 import Mensaje from "./Mensaje";
 export default {
-  name: "DialogoResumenNoLeidos",
+  name: "DialogoMas",
   components: { Mensaje },
 
   mounted() {
-    this.$bus.$on("mismensajesnoleidos", (data) => {
-      this.nl = data;
+    this.$bus.$on('todoslosmensajes', (data) => {
+      this.total = data;
     });
 
-    this.$bus.$on("cierrate", (datoschat, otro) => {
-      this.close();
-    });
+
   },
 
   props: {
-    noleidos: {
+    mas: {
       default: false,
     },
-
-    idpropietario: {
-      required: false,
-    },
+    chat: ''
   },
 
   data() {
     return {
-      nl: null,
-      respuestadd: "",
+      total: []
     };
   },
   methods: {
 
 
     close: function () {
-      this.$emit("update:noleidos", false);
+      this.$emit("update:mas", false);
     },
 
     marcarcomoleidosusuario: function () {
@@ -99,13 +92,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.novisible {
-  display: none;
-}
-
-.v-btn--text {
-  font-size: 15pt !important;
-}
-</style>

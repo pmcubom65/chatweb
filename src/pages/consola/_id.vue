@@ -144,7 +144,7 @@ export default {
 
     setInterval(() => {
       this.resumennoleidos(this.id);
-    }, 1000);
+    }, 5000);
 
     const messaging = fire.messaging();
     messaging.requestPermission();
@@ -186,7 +186,7 @@ export default {
 
       console.log("ejecuto animacion " + mipanel);
       const unaanimacion = "animate__animated";
-      const dosanimacion = "animate__slideInUp";
+      const dosanimacion = "animate__slideInLeft";
       const tresa = "animate__slower";
    //   const cuatro = "animate__delay-1s";
       mipanel.classList.add(unaanimacion);
@@ -200,7 +200,7 @@ export default {
       console.log("quito animacion " + mipanel);
 
             const unaanimacion = "animate__animated";
-      const dosanimacion = "animate__slideInUp";
+      const dosanimacion = "animate__slideInLeft";
       const tresa = "animate__slower";
   //    const cuatro = "animate__delay-1s";
 

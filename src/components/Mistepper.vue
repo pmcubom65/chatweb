@@ -51,7 +51,6 @@
                     outlined
                     class="pa-2 lastarjetaschats"
                     :id="tarjetaid(item.ID)"
-                  
                   >
                     <v-list-item three-line>
                       <v-list-item-content>
@@ -112,6 +111,7 @@
                   xl="4"
                   md="12"
                 >
+
                   <v-card
                     min-width="344"
                     outlined
@@ -195,7 +195,29 @@
       </v-stepper-content>
 
       <v-stepper-content step="2" class="estestepper">
-        <v-card class="mb-12 pb-12 pt-12 pl-12 pr-12" color="red lighten-5"  id="cajitas">
+        <v-card
+          class="mb-12 pb-12 pt-12 pl-12 pr-12"
+          color="red lighten-5"
+          id="cajitas"
+        >
+          <v-layout row wrap justify-end v-if="!chatogrupo">
+            <v-tooltip top>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="mx-2"
+                  fab
+                  dark
+                  color="indigo"
+                  @click="dialoold"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon dark> mdi-plus </v-icon>
+                </v-btn>
+              </template>
+              <span>Ver mensajes antiguos</span>
+            </v-tooltip>
+          </v-layout>
           <div
             v-for="item in mensajes"
             v-bind:key="item.id"
@@ -264,6 +286,11 @@
         <dialogo-usuarios-chat
           :dialogousuarios.sync="dialogu"
         ></dialogo-usuarios-chat>
+
+        <dialogo-mas
+          :mas.sync="dialogoold"
+          :chat="chatseleccionado"
+        ></dialogo-mas>
       </v-stepper-content>
     </v-stepper-items>
   </v-stepper>
@@ -277,6 +304,8 @@ import DialogoMiembros from "./DialogoMiembros";
 import DialogoUsuariosChat from "./DialogoUsuariosChat";
 import Mensaje from "./Mensaje.vue";
 
+import DialogoMas from "./DialogoMas.vue";
+
 export default {
   name: "Mistepper",
   components: {
@@ -284,6 +313,7 @@ export default {
     MiDialogo,
     DialogoMiembros,
     DialogoUsuariosChat,
+    DialogoMas,
   },
 
   mounted() {
@@ -303,11 +333,13 @@ export default {
     }, 5000);
 
     this.$bus.$on("actualizarstepper", () => {
+      console.log("actualizando stepper");
+
       this.$store.dispatch("getAmigos", this.$route.params.id.split("&&")[2]);
       this.chats = this.$store.state.amigos;
       //  this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
-      
-      if (this.chatactualizando!=null && this.chatactualizando!='') {
+
+      if (this.chatactualizando != null && this.chatactualizando != "") {
         this.chatyacreado(this.chatactualizando);
       }
     });
@@ -325,10 +357,7 @@ export default {
     });
 
     this.$bus.$on("volvertab", () => {
-      
       this.volveratras();
-
-      
     });
   },
 
@@ -341,6 +370,12 @@ export default {
   watch: {},
 
   methods: {
+    dialoold: function () {
+      this.$bus.$emit("todoslosmensajes", this.mensajesdialogo);
+
+      this.dialogoold = true;
+    },
+
     cogergrupos: function () {
       axios
         .post("https://sdi2.smartlabs.es:30002/api/smartchat/misgrupos", {
@@ -435,24 +470,19 @@ export default {
     },
 
     volveratras: function () {
-
-      this.$bus.$emit('probaranimacion')
+      this.$bus.$emit("probaranimacion");
 
       var caj = document.getElementById("cajitas");
-
 
       const unaanimacion = "animate__animated";
       const dosanimacion = "animate__fadeIn";
       const tresa = "animate__slow";
       const cuatro = "animate__delay-1s";
 
- 
-        caj.classList.remove(unaanimacion);
-        caj.classList.remove(dosanimacion);
-        caj.classList.remove(tresa);
-        caj.classList.remove(cuatro);
-
-
+      caj.classList.remove(unaanimacion);
+      caj.classList.remove(dosanimacion);
+      caj.classList.remove(tresa);
+      caj.classList.remove(cuatro);
 
       this.ponercomoleidos(this.chatactualizando);
       var buscarelt =
@@ -460,16 +490,15 @@ export default {
           ? "tarjeta" + this.chatseleccionado.ID
           : "";
 
-      if (document.getElementById(buscarelt)!=null) {
-            document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
+      if (document.getElementById(buscarelt) != null) {
+        document.getElementById(buscarelt).style.backgroundColor = "#FFFFFF";
       }
-
-     
 
       this.cargarAmigosStepper(this.$route.params.id.split("&&")[2]);
 
       this.chatseleccionado = null;
       this.mensajes = [];
+      this.mensajesdialogo = [];
       clearInterval(this.myVar);
 
       this.e1 = 1;
@@ -479,9 +508,6 @@ export default {
         left: 0,
         behavior: "smooth",
       });
-
-
-      
     },
 
     ponercomoleidos: function (numerochat) {
@@ -499,8 +525,7 @@ export default {
     },
 
     seleccionadogrupo: function (item, grupos) {
-
-      this.$bus.$emit('quitaranimacion');
+      this.$bus.$emit("quitaranimacion");
 
       var buscagrupo = "tarjeta" + item.ID;
 
@@ -510,21 +535,19 @@ export default {
         var quitar = "tarjeta" + grupos[i].ID;
 
         if (!(quitar === buscagrupo)) {
-          console.log(quitar);
-          console.log(buscagrupo);
           document.getElementById(quitar).style.backgroundColor = "#FFFFFF";
         }
       }
 
       this.chatseleccionado = item;
-      window.scrollTo(0,document.body.scrollHeight, "smooth");
+
+      window.scrollTo(0, document.body.scrollHeight, "smooth");
 
       this.iniciarChat();
     },
 
     seleccionado: function (item, lista) {
-
-      this.$bus.$emit('quitaranimacion');
+      this.$bus.$emit("quitaranimacion");
 
       var buscarel = "tarjeta" + item.ID;
       document.getElementById(buscarel).style.backgroundColor = "#FA8072";
@@ -544,20 +567,16 @@ export default {
       document.getElementById("botoniniciarchat").click();
 
       var caj = document.getElementById("cajitas");
-      console.log("quito animacion cajas" + caj);
 
       const unaanimacion = "animate__animated";
       const dosanimacion = "animate__fadeIn";
       const tresa = "animate__slow";
       const cuatro = "animate__delay-1s";
 
- 
-        caj.classList.add(unaanimacion);
-        caj.classList.add(dosanimacion);
-        caj.classList.add(tresa);
-        caj.classList.add(cuatro);
-
-
+      caj.classList.add(unaanimacion);
+      caj.classList.add(dosanimacion);
+      caj.classList.add(tresa);
+      caj.classList.add(cuatro);
     },
 
     construirRuta: function (ruta) {
@@ -572,8 +591,7 @@ export default {
     },
 
     iniciarChat: function () {
-
-      console.log('refresco chat....');
+      console.log("refresco chat....");
       if (this.chatseleccionado != null) {
         this.e1 = 2;
 
@@ -592,13 +610,10 @@ export default {
 
         var miinput = document.getElementById("textomensaje");
 
-   
-        window.setTimeout(()=> {
-  
+        window.setTimeout(() => {
+ 
           miinput.focus();
         }, 1000);
-
-
       }
     },
 
@@ -630,8 +645,7 @@ export default {
     },
 
     chatyacreado: function (valorchat) {
-      
-      
+
       axios
         .post(
           "https://sdi2.smartlabs.es:30002/api/smartchat/buscarmensajeschat",
@@ -641,23 +655,26 @@ export default {
         )
         .then((response) => {
 
-            var dataArr = response.data.mensajes.map((item) => {
-
+           var dataArr = response.data.mensajes.map((item) => {
             return [item.DIA, item];
           }); // creates array of array
 
-    
           var maparr = new Map(dataArr); // create key value pair from array of array
-  
+
           var result = [...maparr.values()]; //converting back to array from mapobject
 
 
-            if (valorchat.length>10){
-                  this.mensajes = response.data.mensajes;
-            }else {
+          if (valorchat.toString().length < 8) {
+            this.mensajesdialogo = result;
+            this.mensajes = result.slice(result.length - 6, result.length);
 
-              this.mensajes=result;
-            }
+          } else {
+            this.mensajes = response.data.mensajes;
+          }
+
+          //  this.mensajes = response.data.mensajes;
+
+          //  this.mensajes=result.slice(result.length-6, result.length);
 
         })
         .catch(function (error) {
@@ -700,7 +717,6 @@ export default {
           }
         }
 
-
         this.iniciarChat();
       }
     },
@@ -716,11 +732,10 @@ export default {
         })
         .then((response) => {
 
-              if (receptor.TELEFONO!=this.$store.state.usuario.TELEFONO){
-                    this.mandarnotificacion(receptor, esgrupoono);
-              }
-
-     
+   
+          if (receptor.TELEFONO != this.$store.state.usuario.TELEFONO) {
+            this.mandarnotificacion(receptor, esgrupoono);
+          }
         })
         .catch(function (error) {
           console.log(error);
@@ -728,14 +743,12 @@ export default {
     },
 
     mandarnotificacion: function (receptor, esgrupoono) {
-
       var jdata = {
-   
         titulo: this.mensajeescrito,
         fotoemisor: this.$store.state.usuario.RUTA,
 
         nombreemisor: this.$route.params.id.split("&&")[1],
-        click_action : "https://smartchat.smartlabs.es/",
+        click_action: "https://smartchat.smartlabs.es/",
 
         esgrupo: esgrupoono,
       };
@@ -757,16 +770,13 @@ export default {
           }
         )
         .then((response) => {
+          this.mensajeescrito = "";
+        
 
-         this.mensajeescrito = "";
         })
         .catch(function (error) {
           console.log(error);
         });
-
-
-
-  
     },
   },
 
@@ -783,6 +793,7 @@ export default {
       chats: [],
       grupos: [],
       mensajes: [],
+      mensajesdialogo: [],
       chatseleccionado: null,
       myVar: "",
       mensajeescrito: "",
@@ -793,6 +804,7 @@ export default {
       chatactualizando: "",
 
       ver: this.$props.tipo,
+      dialogoold: false,
 
       foto: "",
     };
@@ -881,6 +893,4 @@ export default {
     height: 0;
   }
 }
-
-
 </style>
